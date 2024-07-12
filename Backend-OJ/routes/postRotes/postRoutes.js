@@ -1,5 +1,7 @@
-import { Router as router } from "express";
-import colors from "colors";
+import { Router as postRouter } from "express";
 import { registerNewUser } from "../../controllers/postControllers/registerNewUser";
+import { loginUser } from "../../controllers/postControllers/loginUser";
 
-router.post("/register", registerNewUser);
+postRouter.post("/register", registerNewUser);
+
+postRouter.post("/login", loginUser);

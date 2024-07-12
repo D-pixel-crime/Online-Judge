@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv/config";
-import colors from "colors";
+import "dotenv/config";
+import "colors";
 
 export const connectToDB = async () => {
   try {
