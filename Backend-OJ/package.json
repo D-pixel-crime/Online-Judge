@@ -1,0 +1,22 @@
+{
+  "name": "backend-oj",
+  "version": "1.0.0",
+  "description": "Backend for Online Judge",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Deepak Kumar Pal",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.0",
+    "morgan": "^1.10.0"
+  }
+}
