@@ -1,14 +1,42 @@
+import axios from "axios";
+import { CircleCheckBig, CircleX } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-  const [userDetails, handleUserDetails] = useState({
+  const [userDetails, setUserDetails] = useState({
     username: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isFilled, setIsFilled] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!(userDetails.username && userDetails.password)) {
+      setIsFilled(true);
+      setTimeout(() => {
+        setIsFilled(false);
+      }, 3000);
+      return;
+    }
+
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/login`,
+      userDetails,
+      {
+        withCredentials: true,
+      }
+    );
+
+    if (data.token) {
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        window.location.href = "/";
+      }, 3000);
+    }
   };
 
   return (
@@ -20,9 +48,9 @@ const Login = () => {
         <form
           onSubmit={handleSubmit}
           method="post"
-          className="flex flex-col border-2 border-slate-700 w-4/12 p-8 rounded-xl gap-4 bg-slate-800 shadow-xl shadow-black"
+          className="flex flex-col border-2 border-slate-700 lg:w-4/12 p-8 rounded-xl gap-4 bg-slate-800 shadow-xl shadow-black"
         >
-          <div className="flex flex-col gap-3 text-lg">
+          <div className="flex flex-col gap-4 text-base">
             <div className="flex flex-col">
               <label htmlFor="username">Username</label>
               <input
@@ -32,7 +60,7 @@ const Login = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.username}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     username: e.target.value,
                   });
@@ -48,7 +76,7 @@ const Login = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.password}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     password: e.target.value,
                   });
@@ -72,6 +100,24 @@ const Login = () => {
             </Link>
           </div>
         </form>
+      </div>
+      <div
+        className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] right-0 ${
+          isFilled ? "translate-x-[1%]" : "translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
+      >
+        <CircleX />
+        <div>Please Fill All Details!</div>
+      </div>
+      <div
+        className={`bg-green-600 rounded-md text-white border-2 border-green-600 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] left-0 ${
+          isSuccess ? "-translate-x-[1%]" : "-translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
+      >
+        <div>Successfully Logged In!</div>
+        <CircleCheckBig />
       </div>
     </section>
   );

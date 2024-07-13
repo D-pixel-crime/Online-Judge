@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import "colors";
 
 export const registerNewUser = async (req, res) => {
+  console.log(req.body);
   const { fullName, username, password, email } = req.body;
   try {
     const isUsernamePresent = await User.findOne({ username });
@@ -33,7 +34,16 @@ export const registerNewUser = async (req, res) => {
       }
     );
 
-    res.status(200).json({ ...userCreated, token });
+    res.cookie("userId", userCreated._id, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+      httpOnly: true,
+    });
+    res.cookie("token", token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+      httpOnly: true,
+    });
+
+    res.status(200).json({ token });
   } catch (error) {
     res
       .status(500)

@@ -25,7 +25,16 @@ export const loginUser = async (req, res) => {
       { expiresIn: "2d" }
     );
 
-    res.status(200).json({ ...user, token });
+    res.cookie("userId", user._id, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+      httpOnly: true,
+    });
+    res.cookie("token", token, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+      httpOnly: true,
+    });
+
+    res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: `Error logging in user: ${error.message}` });
     console.log(`Error logging in user: ${error}`.bgRed);

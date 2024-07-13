@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CircleCheckBig, CircleX } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,7 +11,8 @@ const Signup = () => {
     password: "",
   });
 
-  const [isError, setError] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,19 +24,33 @@ const Signup = () => {
         userDetails.password
       )
     ) {
-      setError(true);
+      setIsFilled(true);
       setTimeout(() => {
-        setError(false);
+        setIsFilled(false);
       }, 3000);
       return;
     }
 
     const { data } = await axios.post(
       `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
-      userDetails
+      {
+        fullName: userDetails.fullName,
+        email: userDetails.email,
+        username: userDetails.username,
+        password: userDetails.password,
+      },
+      {
+        withCredentials: true,
+      }
     );
 
-    console.log(data);
+    if (data.token) {
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        window.location.href = "/";
+      }, 3000);
+    }
   };
 
   return (
@@ -46,7 +62,7 @@ const Signup = () => {
         <form
           onSubmit={handleSubmit}
           method="post"
-          className="flex mb-10 flex-col border-2 border-slate-700 w-4/12 p-8 rounded-xl gap-4 bg-slate-800 shadow-xl shadow-black"
+          className="flex mb-10 flex-col border-2 border-slate-700 lg:w-4/12 p-8 rounded-xl gap-4 bg-slate-800 shadow-xl shadow-black"
         >
           <div className="flex flex-col gap-4 text-base">
             <div className="flex flex-col">
@@ -132,15 +148,22 @@ const Signup = () => {
         </form>
       </div>
       <div
-        className={`flex-center mt-10 absolute bottom-[20px] right-0 ${
-          isError ? "translate-x-[1%]" : "translate-x-[105%]"
+        className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] right-0 ${
+          isFilled ? "translate-x-[1%]" : "translate-x-[105%]"
         } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
       >
-        <div
-          className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5`}
-        >
-          Please Fill All Details!
-        </div>
+        <CircleX />
+        <div>Please Fill All Details!</div>
+      </div>
+      <div
+        className={`bg-green-600 rounded-md text-white border-2 border-green-600 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] left-0 ${
+          isSuccess ? "-translate-x-[1%]" : "-translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
+      >
+        <div>Successfully Signed Up!</div>
+        <CircleCheckBig />
       </div>
     </section>
   );
