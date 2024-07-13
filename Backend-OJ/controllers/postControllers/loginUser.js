@@ -1,5 +1,5 @@
 import "colors";
-import { User } from "../../models/User";
+import { User } from "../../models/User.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 

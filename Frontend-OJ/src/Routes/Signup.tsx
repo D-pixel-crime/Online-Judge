@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -9,14 +10,37 @@ const Signup = () => {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isError, setError] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (
+      !(
+        userDetails.fullName &&
+        userDetails.email &&
+        userDetails.username &&
+        userDetails.password
+      )
+    ) {
+      setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+      return;
+    }
+
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
+      userDetails
+    );
+
+    console.log(data);
   };
 
   return (
     <section className="h-full w-full bg-slate-900 text-white">
       <div className="h-full w-full flex items-center flex-col gap-8">
-        <h1 className="text-7xl mt-12 bg-gradient-to-bl from-purple-400 via-orange-500 via-20% font-bold pb-4 to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-7xl mt-8 bg-gradient-to-bl from-purple-400 via-orange-500 via-20% font-bold pb-1 to-purple-400 bg-clip-text text-transparent">
           Signup
         </h1>
         <form
@@ -106,6 +130,17 @@ const Signup = () => {
             </Link>
           </div>
         </form>
+      </div>
+      <div
+        className={`flex-center mt-10 absolute bottom-[20px] right-0 ${
+          isError ? "translate-x-[1%]" : "translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+      >
+        <div
+          className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5`}
+        >
+          Please Fill All Details!
+        </div>
       </div>
     </section>
   );
