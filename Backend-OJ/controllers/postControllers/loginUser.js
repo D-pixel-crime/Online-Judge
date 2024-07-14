@@ -10,13 +10,13 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const isPasswordCorrect = bcryptjs.compareSync(password, user.password);
 
     if (!isPasswordCorrect) {
-      res.status(400).json({ error: "Invalid password" });
+      return res.status(400).json({ error: "Invalid password" });
     }
 
     const token = jwt.sign(
@@ -25,18 +25,21 @@ export const loginUser = async (req, res) => {
       { expiresIn: "2d" }
     );
 
+    res.cookie("username", username, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+    });
     res.cookie("userId", user._id, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
     });
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
     });
 
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error: `Error logging in user: ${error.message}` });
     console.log(`Error logging in user: ${error}`.bgRed);
+    return res
+      .status(500)
+      .json({ error: `Error logging in user: ${error.message}` });
   }
 };

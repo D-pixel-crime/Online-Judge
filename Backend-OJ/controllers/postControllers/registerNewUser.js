@@ -34,20 +34,21 @@ export const registerNewUser = async (req, res) => {
       }
     );
 
+    res.cookie("username", username, {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+    });
     res.cookie("userId", userCreated._id, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
     });
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      httpOnly: true,
     });
 
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   } catch (error) {
-    res
+    console.log(`Error registering new user: ${error}`.bgRed);
+    return res
       .status(500)
       .json({ error: `Error registering new user: ${error.message}` });
-    console.log(`Error registering new user: ${error}`.bgRed);
   }
 };

@@ -1,9 +1,18 @@
 import axios from "axios";
 import { CircleCheckBig, CircleX } from "lucide-react";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
+  useLayoutEffect(() => {
+    const username = Cookies.get("username");
+    const token = Cookies.get("token");
+    if (username && token) {
+      window.location.href = "/";
+    }
+  }, []);
+
   const [userDetails, setUserDetails] = useState({
     username: "",
     password: "",
@@ -11,6 +20,8 @@ const Login = () => {
 
   const [isFilled, setIsFilled] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [whatIsTheError, setWhatIsTheError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,19 +33,32 @@ const Login = () => {
       return;
     }
 
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/login`,
-      userDetails,
-      {
-        withCredentials: true,
-      }
-    );
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/login`,
+        userDetails,
+        {
+          withCredentials: true,
+        }
+      );
 
-    if (data.token) {
-      setIsSuccess(true);
+      if (data.token) {
+        setUserDetails({ username: "", password: "" });
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          window.location.href = "/";
+        }, 3000);
+      }
+    } catch ({
+      response: {
+        data: { error },
+      },
+    }: any) {
+      setWhatIsTheError(error || "An Unexpected Error Occurred!");
+      setIsError(true);
       setTimeout(() => {
-        setIsSuccess(false);
-        window.location.href = "/";
+        setIsError(false);
       }, 3000);
     }
   };
@@ -109,6 +133,15 @@ const Login = () => {
       >
         <CircleX />
         <div>Please Fill All Details!</div>
+      </div>
+      <div
+        className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] right-0 ${
+          isError ? "translate-x-[1%]" : "translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
+      >
+        <CircleX />
+        <div>{whatIsTheError}</div>
       </div>
       <div
         className={`bg-green-600 rounded-md text-white border-2 border-green-600 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] left-0 ${

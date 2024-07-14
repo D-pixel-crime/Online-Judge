@@ -1,10 +1,19 @@
 import axios from "axios";
 import { CircleCheckBig, CircleX } from "lucide-react";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Signup = () => {
-  const [userDetails, handleUserDetails] = useState({
+  useLayoutEffect(() => {
+    const username = Cookies.get("username");
+    const token = Cookies.get("token");
+    if (username && token) {
+      window.location.href = "/";
+    }
+  }, []);
+
+  const [userDetails, setUserDetails] = useState({
     fullName: "",
     email: "",
     username: "",
@@ -13,6 +22,8 @@ const Signup = () => {
 
   const [isFilled, setIsFilled] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [whatIsTheError, setWhatIsTheError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,24 +42,30 @@ const Signup = () => {
       return;
     }
 
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
-      {
-        fullName: userDetails.fullName,
-        email: userDetails.email,
-        username: userDetails.username,
-        password: userDetails.password,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
+        userDetails,
+        {
+          withCredentials: true,
+        }
+      );
 
-    if (data.token) {
-      setIsSuccess(true);
+      if (data.token) {
+        setUserDetails({ username: "", password: "", email: "", fullName: "" });
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          window.location.href = "/";
+        }, 3000);
+      }
+    } catch (error: any) {
+      setWhatIsTheError(
+        error.response?.data?.error || "An Unexpected Error Occurred!"
+      );
+      setIsError(true);
       setTimeout(() => {
-        setIsSuccess(false);
-        window.location.href = "/";
+        setIsError(false);
       }, 3000);
     }
   };
@@ -74,7 +91,7 @@ const Signup = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.fullName}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     fullName: e.target.value,
                   });
@@ -90,7 +107,7 @@ const Signup = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.email}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     email: e.target.value,
                   });
@@ -106,7 +123,7 @@ const Signup = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.username}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     username: e.target.value,
                   });
@@ -122,7 +139,7 @@ const Signup = () => {
                 className="border-2 border-slate-700 rounded-md px-2 py-1.5 bg-transparent text-slate-400"
                 value={userDetails.password}
                 onChange={(e) => {
-                  handleUserDetails({
+                  setUserDetails({
                     ...userDetails,
                     password: e.target.value,
                   });
@@ -155,6 +172,15 @@ const Signup = () => {
       >
         <CircleX />
         <div>Please Fill All Details!</div>
+      </div>
+      <div
+        className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] right-0 ${
+          isError ? "translate-x-[1%]" : "translate-x-[105%]"
+        } transition-transform duration-1000 ease-in-out`}
+        style={{ boxShadow: "0px 0px 10px 2px black" }}
+      >
+        <CircleX />
+        <div>{whatIsTheError}</div>
       </div>
       <div
         className={`bg-green-600 rounded-md text-white border-2 border-green-600 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] left-0 ${
