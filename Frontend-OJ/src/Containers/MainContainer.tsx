@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { CircleUserRound, CircleX, LogIn, NotebookPen } from "lucide-react";
+import { ErrorContext } from "../Context/ErrorContextProvider";
 
 interface mainContainerProps {
   children: React.ReactNode;
@@ -11,8 +12,9 @@ const MainContainer = ({ children }: mainContainerProps) => {
   const username = Cookies.get("username");
   const userId = Cookies.get("userId");
 
-  const [isError, setIsError] = useState(false);
-  const [whatIsTheError, setWhatIsTheError] = useState("");
+  const errorContext = useContext(ErrorContext);
+
+  const { isError, whatIsTheError } = errorContext!;
 
   const { pathname } = useLocation();
 

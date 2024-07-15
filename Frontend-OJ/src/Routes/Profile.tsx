@@ -1,10 +1,15 @@
 import MainContainer from "../Containers/MainContainer";
 import Cookies from "js-cookie";
-import { useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { ErrorContext } from "../Context/ErrorContextProvider";
 
 const Profile = () => {
   const userId = Cookies.get("userId");
+
+  const errorContext = useContext(ErrorContext);
+
+  const { setIsError, setWhatIsTheError } = errorContext!;
 
   const [userDetails, setUserDetails] = useState({
     fullName: "",
@@ -12,7 +17,7 @@ const Profile = () => {
     email: "",
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const { data } = await axios.get(
@@ -23,19 +28,17 @@ const Profile = () => {
         console.log(data);
 
         setUserDetails({
-          ...userDetails,
           username: data.username,
           email: data.email,
           fullName: data.fullName,
         });
       } catch (error) {
         console.log(error);
-
-        // setWhatIsTheError(error || "An Unexpected Error Occurred!");
-        // setIsError(true);
-        // setTimeout(() => {
-        //   setIsError(false);
-        // }, 3000);
+        setWhatIsTheError(error || "An Unexpected Error Occurred!");
+        setIsError(true);
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
       }
     };
 
@@ -74,4 +77,5 @@ const Profile = () => {
     </MainContainer>
   );
 };
+
 export default Profile;

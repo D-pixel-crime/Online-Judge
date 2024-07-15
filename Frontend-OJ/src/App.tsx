@@ -5,10 +5,11 @@ import Home from "./Routes/Home";
 import Signup from "./Routes/Signup";
 import ProblemList from "./Routes/ProblemList";
 import Profile from "./Routes/Profile";
+import { ErrorContextProvider } from "./Context/ErrorContextProvider";
 
 function App() {
   return (
-    <>
+    <ErrorContextProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -19,7 +20,7 @@ function App() {
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </BrowserRouter>
-    </>
+    </ErrorContextProvider>
   );
 }
 
