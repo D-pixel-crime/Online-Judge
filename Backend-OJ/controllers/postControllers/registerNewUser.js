@@ -2,17 +2,18 @@ import { User } from "../../models/User.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "colors";
+import mongoose from "mongoose";
 
 export const registerNewUser = async (req, res) => {
   console.log(req.body);
   const { fullName, username, password, email } = req.body;
   try {
     const isUsernamePresent = await User.findOne({ username });
-    const isEmailPresent = await User.findOne({ email });
-
     if (isUsernamePresent) {
       return res.status(400).json({ error: "Username already exists" });
     }
+
+    const isEmailPresent = await User.findOne({ email });
     if (isEmailPresent) {
       return res.status(400).json({ error: "Email already exists" });
     }
@@ -34,10 +35,14 @@ export const registerNewUser = async (req, res) => {
       }
     );
 
+    const stringUserId = new mongoose.Types.ObjectId(
+      userCreated._id
+    ).toString();
+
     res.cookie("username", username, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
     });
-    res.cookie("userId", userCreated._id, {
+    res.cookie("userId", stringUserId, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
     });
     res.cookie("token", token, {

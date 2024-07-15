@@ -64,7 +64,7 @@ const Login = () => {
   };
 
   return (
-    <section className="h-screen w-screen bg-slate-900 text-white">
+    <section className="h-screen w-screen bg-slate-900 text-white overflow-x-hidden relative">
       <div className="h-full w-full flex items-center flex-col gap-10">
         <h1 className="text-7xl mt-12 bg-gradient-to-bl from-purple-400 via-orange-500 via-20% font-bold py-4 to-purple-400 bg-clip-text text-transparent">
           Login

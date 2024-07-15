@@ -71,7 +71,7 @@ const Signup = () => {
   };
 
   return (
-    <section className="h-full w-full bg-slate-900 text-white">
+    <section className="h-full w-full bg-slate-900 text-white relative overflow-x-hidden">
       <div className="h-full w-full flex items-center flex-col gap-8">
         <h1 className="text-7xl mt-8 bg-gradient-to-bl from-purple-400 via-orange-500 via-20% font-bold pb-1 to-purple-400 bg-clip-text text-transparent">
           Signup

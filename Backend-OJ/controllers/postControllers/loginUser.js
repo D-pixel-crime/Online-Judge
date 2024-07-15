@@ -2,6 +2,7 @@ import "colors";
 import { User } from "../../models/User.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
@@ -25,10 +26,12 @@ export const loginUser = async (req, res) => {
       { expiresIn: "2d" }
     );
 
+    const stringUserId = new mongoose.Types.ObjectId(user._id).toString();
+
     res.cookie("username", username, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
     });
-    res.cookie("userId", user._id, {
+    res.cookie("userId", stringUserId, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
     });
     res.cookie("token", token, {
