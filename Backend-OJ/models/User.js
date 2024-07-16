@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  problems: {
+    type: [Schema.Types.ObjectId],
+    ref: "Problem",
+  },
 });
 
 export const User = model("User", UserSchema);

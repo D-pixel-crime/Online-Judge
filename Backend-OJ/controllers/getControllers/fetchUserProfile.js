@@ -1,5 +1,6 @@
 import "colors";
 import { User } from "../../models/User.js";
+import { Problem } from "../../models/Problem.js";
 
 export const fetchUserProfile = async (req, res) => {
   const userId = req.cookies.userId;
@@ -11,7 +12,14 @@ export const fetchUserProfile = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    return res.status(200).json({ user });
+    const problems = await Problem.find({ author: userId });
+
+    return res.status(200).json({
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+      problems: problems,
+    });
   } catch (error) {
     console.log(`Error fetching user profile: ${error}`.bgRed);
     return res

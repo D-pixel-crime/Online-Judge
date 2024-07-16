@@ -9,13 +9,24 @@ const ProblemSchema = new Schema({
     type: String,
     required: true,
   },
-  tags: {
-    type: [String],
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   testCases: {
-    type: [Schema.Types.ObjectId],
-    ref: "TestCase",
+    type: [
+      {
+        input: {
+          type: String,
+          required: true,
+        },
+        output: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     required: true,
   },
 });

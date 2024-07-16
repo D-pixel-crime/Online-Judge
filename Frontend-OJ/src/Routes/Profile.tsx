@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
+import ProblemList from "./ProblemList";
 
 const Profile = () => {
   const userId = Cookies.get("userId");
@@ -15,6 +16,7 @@ const Profile = () => {
     fullName: "",
     username: "",
     email: "",
+    problems: [],
   });
 
   useEffect(() => {
@@ -25,16 +27,19 @@ const Profile = () => {
           { withCredentials: true }
         );
 
-        console.log(data);
-
         setUserDetails({
           username: data.username,
           email: data.email,
           fullName: data.fullName,
+          problems: data.problems,
         });
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
-        setWhatIsTheError(error || "An Unexpected Error Occurred!");
+        setWhatIsTheError(
+          error.message ||
+            error.response?.data?.error ||
+            "An Unexpected Error Occurred!"
+        );
         setIsError(true);
         setTimeout(() => {
           setIsError(false);
@@ -63,6 +68,15 @@ const Profile = () => {
             <li>Full Name: {userDetails.fullName}</li>
             <li>Username: {userDetails.username}</li>
             <li>Email: {userDetails.email}</li>
+            <li className="flex flex-row gap-5">
+              <div>Authored Problems: </div>
+              <div className="grid grid-cols-5 gap-5">
+                {userDetails.problems &&
+                  userDetails.problems.map((eachProblem: any) => (
+                    <p key={eachProblem._id}>{eachProblem.title}</p>
+                  ))}
+              </div>
+            </li>
           </ul>
         </div>
         <div className="flex justify-end">
