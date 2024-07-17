@@ -8,6 +8,7 @@ import Profile from "./Routes/Profile";
 import { ErrorContextProvider } from "./Context/ErrorContextProvider";
 import AddProblem from "./Routes/AddProblem";
 import { ConfirmationContextProvider } from "./Context/ConfirmationContextProvider";
+import SolveProblem from "./Routes/SolveProblem";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/all/problems" element={<ProblemList />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/add-problem" element={<AddProblem />} />
+            <Route path="/problem/:id" element={<SolveProblem />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </BrowserRouter>

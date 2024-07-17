@@ -34,7 +34,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
               className={`${
                 pathname == "/"
                   ? "border-b-4 hover:cursor-default py-1 text-amber-400"
-                  : "hover:text-amber-400 transition-colors"
+                  : "hover:text-amber-400 transition hover:-translate-y-[5%]"
               } border-yellow-400 w-fit`}
             >
               <Link
@@ -49,7 +49,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
                 className={`${
                   pathname == "/add-problem"
                     ? "border-b-4 hover:cursor-default py-1"
-                    : "hover:text-slate-400 transition-colors"
+                    : "hover:text-slate-400 transition hover:-translate-y-[5%]"
                 } border-yellow-400`}
               >
                 <Link
@@ -66,7 +66,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
                 className={`${
                   pathname == "/all/problems"
                     ? "border-b-4 hover:cursor-default py-1"
-                    : "hover:text-slate-400 transition-colors"
+                    : "hover:text-slate-400 hover:-translate-y-[5%] transition"
                 } border-yellow-400`}
               >
                 <Link
@@ -85,8 +85,8 @@ const MainContainer = ({ children }: mainContainerProps) => {
                     ? "border-b-4 hover:cursor-default text-cyan-400 py-1"
                     : !username
                     ? "text-green-600 hover:text-green-300"
-                    : "hover:text-cyan-400"
-                } border-cyan-400 transition-colors`}
+                    : "hover:text-cyan-400 hover:-translate-y-[5%]"
+                } border-cyan-400 transition`}
               >
                 <Link
                   to={username ? `/profile/${userId}` : "/login"}
@@ -117,7 +117,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
       <div
         className={`bg-red-500 rounded-md text-white border-2 border-red-500 w-fit px-2 py-1.5 flex-center gap-1 mt-10 fixed top-[40%] right-0 ${
           isError ? "translate-x-[1%]" : "translate-x-[105%]"
-        } transition-transform duration-1000 ease-in-out`}
+        } transition-transform duration-1000 ease-in-out z-50`}
         style={{ boxShadow: "0px 0px 10px 2px black" }}
       >
         <CircleX />
@@ -126,7 +126,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
       <div
         className={`bg-green-600 rounded-md text-white border-2 border-green-600 w-fit px-2 py-1.5 flex-center gap-1 mt-10 absolute top-[40%] left-0 ${
           isConfirmed ? "-translate-x-[1%]" : "-translate-x-[105%]"
-        } transition-transform duration-1000 ease-in-out`}
+        } transition-transform duration-1000 ease-in-out z-50`}
         style={{ boxShadow: "0px 0px 10px 2px black" }}
       >
         <div>Successful!</div>

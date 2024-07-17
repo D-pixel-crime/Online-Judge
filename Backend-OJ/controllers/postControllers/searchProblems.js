@@ -1,9 +1,13 @@
 import "colors";
 import { Problem } from "../../models/Problem.js";
 
-export const fetchProblems = async (req, res) => {
+export const searchProblems = async (req, res) => {
+  const { search } = req.body;
+
   try {
-    const data = await Problem.find({}).populate("author", "username");
+    const data = await Problem.find({
+      title: { $regex: search, $options: "i" },
+    }).populate("author", "username");
 
     const problems = data.map((eachProblem) => {
       return {
@@ -17,7 +21,9 @@ export const fetchProblems = async (req, res) => {
 
     return res.status(200).json({ problems });
   } catch (error) {
-    console.log(`Problems could not be fetched:${error}`.bgRed);
-    return res.status(500).json({ error: error.message });
+    console.log(`Error searching for problems: ${error}`.bgRed);
+    return res
+      .status(500)
+      .json({ error: `Error during search: ${error.message}` });
   }
 };

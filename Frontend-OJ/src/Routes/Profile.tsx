@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import ProblemList from "./ProblemList";
+import { Link } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 
 const Profile = () => {
   const userId = Cookies.get("userId");
@@ -65,15 +67,29 @@ const Profile = () => {
             Your Profile
           </h1>
           <ul className="text-xl flex flex-col gap-4">
-            <li>Full Name: {userDetails.fullName}</li>
-            <li>Username: {userDetails.username}</li>
-            <li>Email: {userDetails.email}</li>
+            <li className="flex gap-5">
+              <div>Full Name: </div> <div>{userDetails.fullName}</div>
+            </li>
+            <li className="flex gap-5">
+              <div>Username: </div> <div>{userDetails.username}</div>
+            </li>
+            <li className="flex gap-5">
+              <div>Email: </div> <div>{userDetails.email}</div>
+            </li>
             <li className="flex flex-row gap-5">
-              <div>Authored Problems: </div>
-              <div className="grid grid-cols-5 gap-5">
+              <div>Contributed Problems: </div>
+              <div className="grid grid-cols-5 gap-5 w-full">
                 {userDetails.problems &&
                   userDetails.problems.map((eachProblem: any) => (
-                    <p key={eachProblem._id}>{eachProblem.title}</p>
+                    <div key={eachProblem._id} className="w-fit">
+                      <Link
+                        to={`/problem/${eachProblem._id}`}
+                        className="flex border-x px-2 border-slate-500 underline text-blue-400 transition-colors hover:text-cyan-300"
+                      >
+                        <p className="w-fit">{eachProblem.title}</p>
+                        <ExternalLink />
+                      </Link>
+                    </div>
                   ))}
               </div>
             </li>

@@ -4,6 +4,12 @@ import { Problem } from "../../models/Problem.js";
 export const createProblem = async (req, res) => {
   const { title, description, testCases } = req.body;
   const userId = req.cookies.userId;
+  if (
+    testCases[testCases.length - 1].input === "" &&
+    testCases[testCases.length - 1].output === ""
+  ) {
+    testCases.pop();
+  }
 
   try {
     const problem = await Problem.create({
