@@ -1,11 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import MainContainer from "../Containers/MainContainer";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash } from "lucide-react";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import axios from "axios";
 import { ConfirmationContext } from "../Context/ConfirmationContextProvider";
+import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
-const AddProblem = () => {
+const EditProblem = () => {
   const [problemDetails, setProblemDetails] = useState({
     title: "",
     description: "",
@@ -21,8 +23,49 @@ const AddProblem = () => {
   const { setIsError, setWhatIsTheError } = errorContext!;
   const confirmContext = useContext(ConfirmationContext);
   const { setIsConfirmed } = confirmContext!;
+  const problemId = useParams().id;
 
-  const handleCreate = async (e: React.FormEvent) => {
+  useLayoutEffect(() => {
+    const fetchProblemDetails = async () => {
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/get/problem/${problemId}`,
+          { withCredentials: true }
+        );
+
+        if (data.problem.author.username !== Cookies.get("username")) {
+          setWhatIsTheError("You Are Not Authorized To Edit This Problem!");
+          setIsError(true);
+          setTimeout(() => {
+            setIsError(false);
+          }, 3000);
+          window.location.href = "/all/problems";
+        }
+
+        setProblemDetails({
+          title: data.problem.title,
+          description: data.problem.description,
+          testCases: data.problem.testCases,
+        });
+        setCount(data.problem.testCases.length);
+      } catch (error: any) {
+        console.log(error);
+        setIsError(true);
+        setWhatIsTheError(
+          error.message ||
+            error.response?.data?.error ||
+            "An Unexpected Error Occurred!"
+        );
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
+      }
+    };
+
+    fetchProblemDetails();
+  }, []);
+
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!(problemDetails.title && problemDetails.description)) {
       setWhatIsTheError("Please Fill All The Details!");
@@ -33,29 +76,34 @@ const AddProblem = () => {
       return;
     }
 
+    if (
+      problemDetails.testCases.some(
+        (eachCase) => !(eachCase.input && eachCase.output)
+      )
+    ) {
+      setWhatIsTheError("Test-Cases cannot be empty!");
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
+      return;
+    }
+
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/add-problem`,
+      const { data } = await axios.patch(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/edit-problem/${problemId}`,
         problemDetails,
         { withCredentials: true }
       );
 
       console.log(data);
-      setIsConfirmed(true);
-      setTimeout(() => {
-        setIsConfirmed(false);
-      }, 3000);
-      setProblemDetails({
-        title: "",
-        description: "",
-        testCases: [
-          {
-            input: "",
-            output: "",
-          },
-        ],
-      });
-      setCount(0);
+      if (data.success) {
+        setIsConfirmed(true);
+        setTimeout(() => {
+          setIsConfirmed(false);
+          window.location.href = "/all/problems";
+        }, 3000);
+      }
     } catch (error: any) {
       console.log(error);
 
@@ -71,20 +119,47 @@ const AddProblem = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${
+          import.meta.env.VITE_OJ_BACKEND_URI
+        }/post/delete-problem/${problemId}`,
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        setIsConfirmed(true);
+        setTimeout(() => {
+          setIsConfirmed(false);
+          window.location.href = "/all/problems";
+        }, 3000);
+      }
+    } catch (error: any) {
+      console.log(error);
+      setIsError(true);
+      setWhatIsTheError(
+        error.message ||
+          error.response?.data?.error ||
+          "An Unexpected Error Occurred!"
+      );
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
+    }
+  };
+
   return (
     <MainContainer>
       <div className="text-white">
         <div className="flex-center flex-col gap-5">
-          <h1 className="text-4xl border-b-2 pb-1 border-b-blue-400 bg-gradient-to-tr w-fit from-green-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
-            Create A Problem✒️
+          <h1 className="text-4xl bg-gradient-to-tr w-fit border-b-2 pb-1 border-b-orange-400 from-red-400 from-40% via-orange-400 to-red-400 bg-clip-text text-transparent">
+            Update/Delete Problem✒️
           </h1>
-          <p>
-            Thank you for contributing a new problem to our database, and
-            helping the coders think towards newer dimensions.🥰
-          </p>
+          <p>You Can Update The Problem Statement And Test-Cases Here.👇</p>
         </div>
         <form
-          onSubmit={handleCreate}
+          onSubmit={handleUpdate}
           method="post"
           className="flex flex-col gap-10 mt-16 mb-10"
         >
@@ -193,12 +268,28 @@ const AddProblem = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-end mt-10">
+          <div className="flex justify-between mt-10">
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDelete();
+                }}
+                className="px-2 flex-center flex-row py-1.5 w-fit h-fit bg-red-600 border-2 border-red-600 hover:bg-transparent hover:text-red-500 rounded-md"
+              >
+                <Trash />
+                Delete
+              </button>
+              <p className="text-slate-500 text-xs">
+                This will permanently delete the question-data from the
+                database.
+              </p>
+            </div>
             <button
               type="submit"
-              className="px-2 py-1.5 bg-green-600 border-2 border-green-600 hover:bg-transparent hover:text-green-500 rounded-md"
+              className="px-2 py-1.5 w-fit h-fit bg-violet-600 border-2 border-violet-600 hover:bg-transparent hover:text-violet-500 rounded-md"
             >
-              Create
+              Update
             </button>
           </div>
         </form>
@@ -206,4 +297,4 @@ const AddProblem = () => {
     </MainContainer>
   );
 };
-export default AddProblem;
+export default EditProblem;

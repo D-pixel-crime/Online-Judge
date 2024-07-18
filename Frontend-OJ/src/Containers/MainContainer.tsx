@@ -85,7 +85,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
                     ? "border-b-4 hover:cursor-default text-cyan-400 py-1"
                     : !username
                     ? "text-green-600 hover:text-green-300"
-                    : "hover:text-cyan-400 hover:-translate-y-[5%]"
+                    : "hover:text-cyan-400 text-indigo-400 hover:-translate-y-[5%]"
                 } border-cyan-400 transition`}
               >
                 <Link

@@ -4,6 +4,8 @@ import { loginUser } from "../../controllers/postControllers/loginUser.js";
 import { authenticateUser } from "../../authenticate.js";
 import { createProblem } from "../../controllers/postControllers/createProblem.js";
 import { searchProblems } from "../../controllers/postControllers/searchProblems.js";
+import { deleteProblem } from "../../controllers/postControllers/deleteProblem.js";
+import { editProblem } from "../../controllers/postControllers/editProblem.js";
 
 const postRouter = express.Router();
 
@@ -14,5 +16,13 @@ postRouter.post("/login", loginUser);
 postRouter.post("/add-problem", authenticateUser, createProblem);
 
 postRouter.post("/search-problems", authenticateUser, searchProblems);
+
+postRouter.delete(
+  "/delete-problem/:problemId",
+  authenticateUser,
+  deleteProblem
+);
+
+postRouter.patch("/edit-problem/:problemId", authenticateUser, editProblem);
 
 export { postRouter };

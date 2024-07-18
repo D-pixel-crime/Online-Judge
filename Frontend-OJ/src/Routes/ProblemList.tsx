@@ -3,13 +3,15 @@ import MainContainer from "../Containers/MainContainer";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
+import { Eraser, ExternalLink } from "lucide-react";
+import Cookies from "js-cookie";
 
 const ProblemList = () => {
   const [problems, setProblems] = useState([]);
   const errorContext = useContext(ErrorContext);
   const { setIsError, setWhatIsTheError } = errorContext!;
   const [search, setSearch] = useState("");
+  const currUsername = Cookies.get("username");
 
   useEffect(() => {
     handleSearch();
@@ -59,27 +61,39 @@ const ProblemList = () => {
           </div>
         </div>
         <table className="mx-5 table">
-          <thead className="text-xl">
+          <thead className="text-xl bg-slate-700/80">
             <tr>
-              <th className="border-2 border-slate-500 px-4 py-2 text-red-400">
+              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
                 Title
               </th>
-              <th className="border-2 border-slate-500 px-4 py-2 text-red-400">
+              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
                 Author
               </th>
-              <th className="border-2 border-slate-500 px-4 py-2 text-red-400">
+              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
                 Access Link
               </th>
             </tr>
           </thead>
-          <tbody className="text-base">
+          <tbody className="text-base bg-slate-800">
             {problems.map((eachProblem: any) => (
               <tr key={eachProblem._id} className="border-2 border-slate-500">
                 <td className="border-2 border-slate-500 px-4 py-2">
                   {eachProblem.title}
+                  {eachProblem.author.username === currUsername && (
+                    <div className="flex justify-end text-sm">
+                      <Link
+                        to={`/edit/problem/${eachProblem._id}`}
+                        className="flex-center w-fit text-red-500 hover:text-red-300"
+                      >
+                        (Edit/Delete)
+                      </Link>
+                    </div>
+                  )}
                 </td>
                 <td className="border-2 border-slate-500 px-4 py-2 text-violet-300">
-                  {eachProblem.author.username}
+                  {eachProblem.author.username.length > 15
+                    ? eachProblem.author.username.slice(0, 15) + "..."
+                    : eachProblem.author.username}
                 </td>
                 <td className="px-4 py-2 flex justify-end items-center">
                   <Link
