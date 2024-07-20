@@ -2,11 +2,11 @@ import { model, Schema } from "mongoose";
 
 const ProblemSchema = new Schema({
   title: {
-    type: String,
+    type: [String],
     required: true,
   },
   description: {
-    type: String,
+    type: [String],
     required: true,
   },
   author: {
@@ -18,11 +18,11 @@ const ProblemSchema = new Schema({
     type: [
       {
         input: {
-          type: String,
+          type: [String],
           required: true,
         },
         output: {
-          type: String,
+          type: [String],
           required: true,
         },
       },

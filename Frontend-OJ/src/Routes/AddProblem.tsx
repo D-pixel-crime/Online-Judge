@@ -33,10 +33,20 @@ const AddProblem = () => {
       return;
     }
 
+    const problemDetailsToSend = {
+      ...problemDetails,
+      title: problemDetails.title.split("\n"),
+      description: problemDetails.description.split("\n"),
+      testCases: problemDetails.testCases.map((testCase) => ({
+        input: testCase.input.split("\n"),
+        output: testCase.output.split("\n"),
+      })),
+    };
+
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_OJ_BACKEND_URI}/post/add-problem`,
-        problemDetails,
+        problemDetailsToSend,
         { withCredentials: true }
       );
 
@@ -46,12 +56,12 @@ const AddProblem = () => {
         setIsConfirmed(false);
       }, 3000);
       setProblemDetails({
-        title: "",
-        description: "",
+        title: ``,
+        description: ``,
         testCases: [
           {
-            input: "",
-            output: "",
+            input: ``,
+            output: ``,
           },
         ],
       });
@@ -69,6 +79,18 @@ const AddProblem = () => {
         setIsError(false);
       }, 3000);
     }
+  };
+
+  const handleInputChange = (index: number, field: string, value: string) => {
+    const updatedTestCases = [...problemDetails.testCases];
+    updatedTestCases[index] = {
+      ...updatedTestCases[index],
+      [field]: value,
+    };
+    setProblemDetails({
+      ...problemDetails,
+      testCases: updatedTestCases,
+    });
   };
 
   return (
@@ -160,14 +182,7 @@ const AddProblem = () => {
                     className="px-2 py-1.5 rounded-md bg-transparent text-slate-300 border-2 border-slate-500"
                     value={problemDetails.testCases[index].input}
                     onChange={(e) =>
-                      setProblemDetails({
-                        ...problemDetails,
-                        testCases: problemDetails.testCases.map((eachCase, i) =>
-                          i === index
-                            ? { ...eachCase, input: e.target.value }
-                            : eachCase
-                        ),
-                      })
+                      handleInputChange(index, "input", e.target.value)
                     }
                   />
                 </div>
@@ -178,16 +193,9 @@ const AddProblem = () => {
                     id={`textCaseOutput${index}`}
                     className="px-2 py-1.5 rounded-md bg-transparent text-slate-300 border-2 border-slate-500"
                     value={problemDetails.testCases[index].output}
-                    onChange={(e) => {
-                      setProblemDetails({
-                        ...problemDetails,
-                        testCases: problemDetails.testCases.map((eachCase, i) =>
-                          i === index
-                            ? { ...eachCase, output: e.target.value }
-                            : eachCase
-                        ),
-                      });
-                    }}
+                    onChange={(e) =>
+                      handleInputChange(index, "output", e.target.value)
+                    }
                   />
                 </div>
               </div>

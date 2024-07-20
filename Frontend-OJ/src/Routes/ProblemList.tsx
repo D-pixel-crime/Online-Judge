@@ -1,9 +1,9 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import MainContainer from "../Containers/MainContainer";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
-import { Eraser, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Cookies from "js-cookie";
 
 const ProblemList = () => {
@@ -13,7 +13,7 @@ const ProblemList = () => {
   const [search, setSearch] = useState("");
   const currUsername = Cookies.get("username");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     handleSearch();
   }, [search]);
 

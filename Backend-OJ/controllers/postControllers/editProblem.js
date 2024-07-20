@@ -5,6 +5,15 @@ export const editProblem = async (req, res) => {
   const { problemId } = req.params;
   const { title, description, testCases } = req.body;
 
+  if (
+    JSON.stringify(testCases[testCases.length - 1].input) ===
+      JSON.stringify([""]) &&
+    JSON.stringify(testCases[testCases.length - 1].output) ===
+      JSON.stringify([""])
+  ) {
+    testCases.pop();
+  }
+
   try {
     const data = await Problem.findByIdAndUpdate(
       problemId,

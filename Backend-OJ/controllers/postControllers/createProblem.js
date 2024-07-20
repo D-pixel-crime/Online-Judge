@@ -5,8 +5,10 @@ export const createProblem = async (req, res) => {
   const { title, description, testCases } = req.body;
   const userId = req.cookies.userId;
   if (
-    testCases[testCases.length - 1].input === "" &&
-    testCases[testCases.length - 1].output === ""
+    JSON.stringify(testCases[testCases.length - 1].input) ===
+      JSON.stringify([""]) &&
+    JSON.stringify(testCases[testCases.length - 1].output) ===
+      JSON.stringify([""])
   ) {
     testCases.pop();
   }

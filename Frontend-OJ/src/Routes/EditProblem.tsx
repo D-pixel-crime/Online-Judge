@@ -43,9 +43,12 @@ const EditProblem = () => {
         }
 
         setProblemDetails({
-          title: data.problem.title,
-          description: data.problem.description,
-          testCases: data.problem.testCases,
+          title: data.problem.title.join("\n"),
+          description: data.problem.description.join("\n"),
+          testCases: data.problem.testCases.map((eachCase: any) => ({
+            input: eachCase.input.join("\n"),
+            output: eachCase.output.join("\n"),
+          })),
         });
         setCount(data.problem.testCases.length);
       } catch (error: any) {
@@ -89,10 +92,20 @@ const EditProblem = () => {
       return;
     }
 
+    const toSendDetails = {
+      ...problemDetails,
+      title: problemDetails.title.split("\n"),
+      description: problemDetails.description.split("\n"),
+      testCases: problemDetails.testCases.map((eachCase) => ({
+        input: eachCase.input.split("\n"),
+        output: eachCase.output.split("\n"),
+      })),
+    };
+
     try {
       const { data } = await axios.patch(
         `${import.meta.env.VITE_OJ_BACKEND_URI}/post/edit-problem/${problemId}`,
-        problemDetails,
+        toSendDetails,
         { withCredentials: true }
       );
 
@@ -239,7 +252,10 @@ const EditProblem = () => {
                         ...problemDetails,
                         testCases: problemDetails.testCases.map((eachCase, i) =>
                           i === index
-                            ? { ...eachCase, input: e.target.value }
+                            ? {
+                                ...eachCase,
+                                input: e.target.value,
+                              }
                             : eachCase
                         ),
                       })
@@ -258,7 +274,10 @@ const EditProblem = () => {
                         ...problemDetails,
                         testCases: problemDetails.testCases.map((eachCase, i) =>
                           i === index
-                            ? { ...eachCase, output: e.target.value }
+                            ? {
+                                ...eachCase,
+                                output: e.target.value,
+                              }
                             : eachCase
                         ),
                       });
