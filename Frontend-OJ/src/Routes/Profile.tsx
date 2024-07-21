@@ -3,7 +3,6 @@ import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
-import ProblemList from "./ProblemList";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 
@@ -61,20 +60,26 @@ const Profile = () => {
 
   return (
     <MainContainer>
-      <div className="text-white flex flex-col justify-between gap-40">
+      <div
+        className="text-white flex flex-col justify-between gap-20 border-2 bg-white/10 p-5 rounded-lg border-slate-700"
+        style={{ boxShadow: "0px 20px 20px 0px black" }}
+      >
         <div className="flex flex-col gap-10">
-          <h1 className="text-5xl mb-10 w-fit border-b-2 border-violet-400 bg-gradient-to-r from-purple-400 via-violet-300 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl w-fit border-b-2 border-violet-400 bg-gradient-to-r from-purple-400 via-violet-300 to-purple-400 bg-clip-text text-transparent">
             Your Profile
           </h1>
-          <ul className="text-xl flex flex-col gap-4">
+          <ul className="text-xl flex flex-col gap-4 ml-10">
             <li className="flex gap-5">
-              <div>Full Name: </div> <div>{userDetails.fullName}</div>
+              <span className="text-green-500">Full Name : </span>{" "}
+              <span className="text-slate-400">{userDetails.fullName}</span>
             </li>
             <li className="flex gap-5">
-              <div>Username: </div> <div>{userDetails.username}</div>
+              <span className="text-green-500">Username : </span>{" "}
+              <span className="text-slate-400">{userDetails.username}</span>
             </li>
             <li className="flex gap-5">
-              <div>Email: </div> <div>{userDetails.email}</div>
+              <span className="text-green-500">Email : </span>{" "}
+              <span className="text-slate-400">{userDetails.email}</span>
             </li>
             <li className="flex flex-row gap-5">
               <div>Contributed Problems: </div>

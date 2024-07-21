@@ -1,6 +1,12 @@
 import { useParams } from "react-router-dom";
 import MainContainer from "../Containers/MainContainer";
-import React, { useContext, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import axios from "axios";
 import { Editor } from "@monaco-editor/react";
@@ -19,10 +25,8 @@ const SolveProblem = () => {
   const errorContext = useContext(ErrorContext);
   const { setIsError, setWhatIsTheError } = errorContext!;
   const editorRef = useRef(null);
-  const [code, setCode] = useState<string | undefined>(
-    supportedLanguages[0].boilerPlate
-  );
-  const [language, setLanguage] = useState(supportedLanguages[0].name);
+  const [code, setCode] = useState<string | undefined>();
+  const [language, setLanguage] = useState(supportedLanguages[0]);
 
   useLayoutEffect(() => {
     const fetchProblemDetails = async () => {
@@ -56,6 +60,10 @@ const SolveProblem = () => {
 
     fetchProblemDetails();
   }, []);
+
+  useEffect(() => {
+    setCode(language.boilerPlate);
+  }, [language]);
 
   return (
     <MainContainer>
@@ -155,11 +163,10 @@ const SolveProblem = () => {
                 id="lang"
                 className="bg-black rounded-md border-2 shadow-lg shadow-gray-800 border-violet-800 px-1.5 py-1 mb-4 cursor-pointer text-violet-400 outline-none"
                 onChange={(e) => {
-                  setLanguage(e.target.value);
-                  setCode(
+                  setLanguage(
                     supportedLanguages.find(
                       (lang) => lang.name === e.target.value
-                    )?.boilerPlate
+                    )!
                   );
                 }}
               >
@@ -175,7 +182,7 @@ const SolveProblem = () => {
               theme="vs-dark"
               height="80vh"
               width="100%"
-              language={language}
+              language={language.name}
               value={code}
               onChange={(editorValue) => setCode(editorValue)}
               onMount={(editor: any, monaco: any) => {
@@ -205,6 +212,27 @@ const SolveProblem = () => {
                 },
               }}
             />
+            <div className="flex justify-center mt-5">
+              <button
+                onClick={async (e) => {
+                  e.preventDefault();
+                  const { data } = await axios.post(
+                    `${
+                      import.meta.env.VITE_OJ_BACKEND_URI
+                    }/post/run/${problemId}`,
+                    {
+                      code,
+                      extension: language.extension,
+                      language: language.name,
+                    },
+                    { withCredentials: true }
+                  );
+                }}
+                className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
+              >
+                Run (Testing Backend)
+              </button>
+            </div>
           </div>
         </div>
       </div>

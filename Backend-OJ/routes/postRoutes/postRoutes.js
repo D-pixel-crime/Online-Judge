@@ -6,6 +6,7 @@ import { createProblem } from "../../controllers/postControllers/createProblem.j
 import { searchProblems } from "../../controllers/postControllers/searchProblems.js";
 import { deleteProblem } from "../../controllers/postControllers/deleteProblem.js";
 import { editProblem } from "../../controllers/postControllers/editProblem.js";
+import { runCode } from "../../controllers/postControllers/runCode.js";
 
 const postRouter = express.Router();
 
@@ -24,5 +25,7 @@ postRouter.delete(
 );
 
 postRouter.patch("/edit-problem/:problemId", authenticateUser, editProblem);
+
+postRouter.post("/run/:problemId", authenticateUser, runCode);
 
 export { postRouter };
