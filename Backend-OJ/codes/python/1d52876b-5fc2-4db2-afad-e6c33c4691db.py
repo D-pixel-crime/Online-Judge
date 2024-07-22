@@ -1,5 +1,5 @@
 def solve():
-    print("Hello, World!")
+    print("Hello World !")
     pass
 
 solve()
