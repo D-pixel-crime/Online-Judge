@@ -1,5 +1,5 @@
 const solve = () =>{
-    console.log("Hello from JS !");
+    console.log("Hello from Javascript !");
     return;
 }
 

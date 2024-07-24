@@ -27,6 +27,7 @@ const SolveProblem = () => {
   const editorRef = useRef(null);
   const [code, setCode] = useState<string | undefined>();
   const [language, setLanguage] = useState(supportedLanguages[0]);
+  const [output, setOutput] = useState<string | undefined>();
 
   useLayoutEffect(() => {
     const fetchProblemDetails = async () => {
@@ -77,8 +78,8 @@ const SolveProblem = () => {
             ))}
           </h1>
         </div>
-        <div className="grid mt-10 mb-5 grid-cols-4 gap-2 w-full">
-          <div className="col-start-1 col-span-2 break-words mr-10">
+        <div className="grid mt-10 mb-5 grid-cols-4 w-full">
+          <div className="col-start-1 col-span-2 break-words mr-10 h-[80vh] overflow-y-auto px-2">
             <p className="text-slate-500 mb-5">
               Contributed by : {problemDetails.author.username}
             </p>
@@ -227,12 +228,24 @@ const SolveProblem = () => {
                     },
                     { withCredentials: true }
                   );
+
+                  setOutput(data.output);
                 }}
                 className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
               >
                 Run (Testing Backend)
               </button>
             </div>
+            {output && (
+              <div className="bg-slate-800 px-2 py-1.5 text-slate-300">
+                {output.split("\n").map((eachLine, index) => (
+                  <React.Fragment key={index + 1000}>
+                    {eachLine}
+                    <br />
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -22,8 +22,9 @@ export const generateFile = async (code, extension, language) => {
 
     fs.writeFileSync(filePath, code);
 
+    console.log(filePath.bgGreen);
     return filePath;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };

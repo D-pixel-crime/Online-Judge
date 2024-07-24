@@ -8,7 +8,7 @@ const getRouter = express.Router();
 
 getRouter.get("/profile/:id", authenticateUser, fetchUserProfile);
 
-getRouter.get("/all/problems", authenticateUser, fetchProblems);
+getRouter.get("/all/problems", fetchProblems);
 
 getRouter.get("/problem/:problemId", authenticateUser, getProblemDetails);
 

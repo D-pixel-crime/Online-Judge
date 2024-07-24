@@ -1,4 +1,0 @@
-def solve():
-    pass
-
-solve()
