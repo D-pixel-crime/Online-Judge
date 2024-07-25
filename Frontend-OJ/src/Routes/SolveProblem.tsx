@@ -28,6 +28,7 @@ const SolveProblem = () => {
   const [code, setCode] = useState<string | undefined>();
   const [language, setLanguage] = useState(supportedLanguages[0]);
   const [output, setOutput] = useState<string | undefined>();
+  const [input, setInput] = useState<string | undefined>(``);
 
   useLayoutEffect(() => {
     const fetchProblemDetails = async () => {
@@ -65,6 +66,22 @@ const SolveProblem = () => {
   useEffect(() => {
     setCode(language.boilerPlate);
   }, [language]);
+
+  const handleRun = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run/${problemId}`,
+      {
+        code,
+        extension: language.extension,
+        language: language.name,
+        input,
+      },
+      { withCredentials: true }
+    );
+
+    setOutput(data.output);
+  };
 
   return (
     <MainContainer>
@@ -213,39 +230,40 @@ const SolveProblem = () => {
                 },
               }}
             />
+
+            <div className="input-and-output w-full flex gap-2 my-5">
+              <div className="w-full flex flex-col gap-1">
+                <label htmlFor="input">Input</label>
+                <textarea
+                  className="bg-slate-800 px-2 py-1.5 text-slate-300 w-full outline-none"
+                  id="input"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1">
+                <label htmlFor="output">Output</label>
+                <div
+                  className="bg-slate-800 px-2 py-1.5 text-slate-300 h-full"
+                  id="output"
+                >
+                  {output?.split("\n").map((eachLine, index) => (
+                    <React.Fragment key={index + 1000}>
+                      {eachLine}
+                      {index < output.split("\n").length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="flex justify-center mt-5">
               <button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  const { data } = await axios.post(
-                    `${
-                      import.meta.env.VITE_OJ_BACKEND_URI
-                    }/post/run/${problemId}`,
-                    {
-                      code,
-                      extension: language.extension,
-                      language: language.name,
-                    },
-                    { withCredentials: true }
-                  );
-
-                  setOutput(data.output);
-                }}
+                onClick={handleRun}
                 className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
               >
                 Run (Testing Backend)
               </button>
             </div>
-            {output && (
-              <div className="bg-slate-800 px-2 py-1.5 text-slate-300">
-                {output.split("\n").map((eachLine, index) => (
-                  <React.Fragment key={index + 1000}>
-                    {eachLine}
-                    <br />
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>

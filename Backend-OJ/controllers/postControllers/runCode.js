@@ -5,10 +5,10 @@ import { executePython } from "../../executePython.js";
 import { executeJS } from "../../executeJS.js";
 
 export const runCode = async (req, res) => {
-  const { code, extension, language } = req.body;
+  const { code, extension, language, input } = req.body;
 
   try {
-    const filePath = await generateFile(code, extension, language);
+    const filePath = await generateFile(code, extension, language, input);
     let output;
     switch (language) {
       case "cpp":

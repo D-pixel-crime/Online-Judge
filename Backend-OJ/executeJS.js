@@ -9,17 +9,20 @@ let jsDir = path.join(__dirname, "codes");
 jsDir = path.join(jsDir, "javascript");
 
 export const executeJS = async (filePath) => {
-  const file = path.basename(filePath);
+  const jobId = path.basename(filePath).split(".")[0];
 
   return new Promise((resolve, reject) => {
-    exec(`cd ${jsDir} && node ${file}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error, stderr);
+    exec(
+      `cd ${jsDir} && node ${jobId}.js < ${jobId}.txt`,
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(error, stderr);
+        }
+        if (stderr) {
+          reject(stderr);
+        }
+        resolve(stdout);
       }
-      if (stderr) {
-        reject(stderr);
-      }
-      resolve(stdout);
-    });
+    );
   });
 };

@@ -9,17 +9,20 @@ let pythonDir = path.join(__dirname, "codes");
 pythonDir = path.join(pythonDir, "python");
 
 export const executePython = async (filePath) => {
-  const file = path.basename(filePath);
+  const jobId = path.basename(filePath).split(".")[0];
 
   return new Promise((resolve, reject) => {
-    exec(`cd ${pythonDir} && python ${file}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error, stderr);
+    exec(
+      `cd ${pythonDir} && python ${jobId}.py < ${jobId}.txt`,
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(error, stderr);
+        }
+        if (stderr) {
+          reject(stderr);
+        }
+        resolve(stdout);
       }
-      if (stderr) {
-        reject(stderr);
-      }
-      resolve(stdout);
-    });
+    );
   });
 };
