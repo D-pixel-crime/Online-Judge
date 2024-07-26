@@ -83,6 +83,30 @@ const SolveProblem = () => {
     setOutput(data.output);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/submit/${problemId}`,
+        { language: language.name, code, extension: language.extension },
+        { withCredentials: true }
+      );
+
+      setOutput(data.error || data.success);
+    } catch (error: any) {
+      setIsError(true);
+      setWhatIsTheError(
+        error.message ||
+          error.response?.data?.error ||
+          "An Unexpected Error Occurred!"
+      );
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
+    }
+  };
+
   return (
     <MainContainer>
       <div className="text-white">
@@ -256,12 +280,18 @@ const SolveProblem = () => {
                 </div>
               </div>
             </div>
-            <div className="flex justify-center mt-5">
+            <div className="flex justify-between mt-5">
               <button
                 onClick={handleRun}
                 className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
               >
                 Run (Testing Backend)
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="px-2 py-1.5 bg-green-600 border-2 border-green-600 hover:text-green-400 hover:bg-transparent text-white rounded-md"
+              >
+                Submit (Testing Backend)
               </button>
             </div>
           </div>

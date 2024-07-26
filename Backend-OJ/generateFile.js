@@ -9,7 +9,7 @@ const __dirname = path.dirname(temp);
 
 const codesDir = path.join(__dirname, "codes");
 
-export const generateFile = async (code, extension, language, input) => {
+export const generateFile = async (code, extension, language) => {
   const jobId = uuid();
 
   try {
@@ -22,13 +22,9 @@ export const generateFile = async (code, extension, language, input) => {
 
     fs.writeFileSync(filePath, code);
 
-    const inputFilePath = path.join(langDir, `${jobId}.txt`);
-    fs.writeFileSync(inputFilePath, input);
-
-    console.log(filePath.bgGreen);
-    console.log(inputFilePath.bgWhite.black);
+    console.log(filePath.bgMagenta);
     return filePath;
   } catch (error) {
-    return error;
+    return { error };
   }
 };

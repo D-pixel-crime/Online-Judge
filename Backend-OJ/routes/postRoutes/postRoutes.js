@@ -7,6 +7,7 @@ import { searchProblems } from "../../controllers/postControllers/searchProblems
 import { deleteProblem } from "../../controllers/postControllers/deleteProblem.js";
 import { editProblem } from "../../controllers/postControllers/editProblem.js";
 import { runCode } from "../../controllers/postControllers/runCode.js";
+import { submitCode } from "../../controllers/postControllers/submitCode.js";
 
 const postRouter = express.Router();
 
@@ -27,5 +28,7 @@ postRouter.delete(
 postRouter.patch("/edit-problem/:problemId", authenticateUser, editProblem);
 
 postRouter.post("/run/:problemId", authenticateUser, runCode);
+
+postRouter.post("/submit/:problemId", authenticateUser, submitCode);
 
 export { postRouter };
