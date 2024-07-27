@@ -36,15 +36,13 @@ export const submitCode = async (req, res) => {
       console.log(output.bgGreen);
 
       if (output.trim() !== testCase.output.join("\n").trim()) {
-        return res.status(200).json({ error: `Test case ${index + 1} failed` });
+        return res.status(400).json({ error: `Test case ${index + 1} failed` });
       }
     }
 
     return res.status(200).json({ success: "All test cases passed" });
   } catch (error) {
     console.log(`Error submitting code: ${error}`.bgRed);
-    return res
-      .status(500)
-      .json({ error: `Error submitting code: ${error.message}` });
+    return res.status(500).json({ error: `Error submitting code` });
   }
 };

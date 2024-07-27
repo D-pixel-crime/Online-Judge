@@ -2,8 +2,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { exec } from "child_process";
 
-const temp = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(temp);
+// const temp = fileURLToPath(import.meta.url);
+const __dirname = path.resolve();
 
 let cppDir = path.join(__dirname, "codes");
 cppDir = path.join(cppDir, "cpp");
