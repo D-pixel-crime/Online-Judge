@@ -5,10 +5,8 @@ import { exec } from "child_process";
 // const temp = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
-let cppDir = path.join(__dirname, "codes");
-cppDir = path.join(cppDir, "cpp");
-
 export const executeCPP = async (filePath) => {
+  let cppDir = path.join(__dirname, "codes/cpp");
   const jobId = path.basename(filePath).split(".")[0];
 
   return new Promise((resolve, reject) => {

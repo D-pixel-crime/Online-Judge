@@ -1,19 +1,15 @@
 import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
-const temp = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(temp);
-
-let langDir = path.join(__dirname, "codes");
+const __dirname = path.resolve();
 
 export const checkCase = async (filePath, inputPath, input, language) => {
+  let langDir = path.join(__dirname, `codes/${language}`);
   const strInput = input.join("\n");
   console.log(strInput);
 
   const jobId = path.basename(filePath).split(".")[0];
-  langDir = path.join(langDir, `${language}`);
 
   try {
     fs.writeFileSync(inputPath, strInput.trim());

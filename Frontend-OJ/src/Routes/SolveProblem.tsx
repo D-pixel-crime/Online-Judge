@@ -268,7 +268,11 @@ const SolveProblem = () => {
               <div className="w-full flex flex-col gap-1">
                 <label htmlFor="output">Output</label>
                 <div
-                  className="bg-slate-800 px-2 py-1.5 text-slate-300 h-full"
+                  className={`bg-slate-800 px-2 py-1.5 h-full ${
+                    output && output == "All test cases passed"
+                      ? "text-green-400"
+                      : "text-red-500"
+                  }`}
                   id="output"
                 >
                   {output?.split("\n").map((eachLine, index) => (

@@ -33,11 +33,11 @@ export const submitCode = async (req, res) => {
         return res.status(500).json({ error: output.error.message });
       }
 
-      console.log(output.bgGreen);
-
       if (output.trim() !== testCase.output.join("\n").trim()) {
-        return res.status(400).json({ error: `Test case ${index + 1} failed` });
+        return res.status(200).json({ error: `Test case ${index + 1} failed` });
       }
+
+      console.log(output.bgGreen);
     }
 
     return res.status(200).json({ success: "All test cases passed" });

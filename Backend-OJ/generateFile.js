@@ -1,15 +1,11 @@
 import path from "path";
 import fs from "fs";
 import { v4 as uuid } from "uuid";
-import { fileURLToPath } from "url";
 
-// As __dirname only works with commonJS, we need to use fileURLToPath to get the __dirname
-// const temp = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
-const codesDir = path.join(__dirname, "codes");
-
 export const generateFile = async (code, extension, language) => {
+  const codesDir = path.join(__dirname, "codes");
   const jobId = uuid();
 
   try {
@@ -22,7 +18,7 @@ export const generateFile = async (code, extension, language) => {
 
     fs.writeFileSync(filePath, code);
 
-    // console.log(filePath.bgMagenta);
+    console.log(filePath.bgMagenta);
     return filePath;
   } catch (error) {
     return { error };
