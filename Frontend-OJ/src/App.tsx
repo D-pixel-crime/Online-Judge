@@ -10,6 +10,7 @@ import AddProblem from "./Routes/AddProblem";
 import { ConfirmationContextProvider } from "./Context/ConfirmationContextProvider";
 import SolveProblem from "./Routes/SolveProblem";
 import EditProblem from "./Routes/EditProblem";
+import Compiler from "./Routes/Compiler";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/add-problem" element={<AddProblem />} />
             <Route path="/edit/problem/:id" element={<EditProblem />} />
             <Route path="/problem/:id" element={<SolveProblem />} />
+            <Route path="/compiler" element={<Compiler />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </BrowserRouter>

@@ -31,8 +31,8 @@ const ProblemList = () => {
       console.log(error);
       setIsError(true);
       setWhatIsTheError(
-        error.message ||
-          error.response?.data?.error ||
+        error.response?.data?.error ||
+          error.message ||
           "An Unexpected Error Occurred!"
       );
       setTimeout(() => {

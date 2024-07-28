@@ -5,6 +5,7 @@ import {
   CircleCheckBig,
   CircleUserRound,
   CircleX,
+  Code,
   LogIn,
   NotebookPen,
   PlusCircle,
@@ -45,6 +46,23 @@ const MainContainer = ({ children }: mainContainerProps) => {
               </Link>
             </li>
             <div className="flex-center gap-10">
+              <li
+                className={`${
+                  pathname == "/compiler"
+                    ? "border-b-4 hover:cursor-default py-1 text-green-400"
+                    : "hover:text-green-300 transition hover:-translate-y-[5%]"
+                } border-green-500`}
+              >
+                <Link
+                  to="/compiler"
+                  className={`${
+                    pathname == "/compiler" ? "hover:cursor-default" : ""
+                  }  flex-center gap-1.5`}
+                >
+                  <Code />
+                  <p>Compiler</p>
+                </Link>
+              </li>
               <li
                 className={`${
                   pathname == "/add-problem"

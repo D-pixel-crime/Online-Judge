@@ -1,17 +1,20 @@
-import { fileURLToPath } from "url";
 import path from "path";
 import { exec } from "child_process";
+import fs from "fs";
 
-// const temp = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
 export const executeCPP = async (filePath) => {
-  let cppDir = path.join(__dirname, "codes/cpp");
+  const cppDir = path.join(__dirname, "codes/cpp");
   const jobId = path.basename(filePath).split(".")[0];
+
+  const isInput = fs.existsSync(`${cppDir}/${jobId}.txt`);
 
   return new Promise((resolve, reject) => {
     exec(
-      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.exe && .\\${jobId}.exe < ${jobId}.txt`,
+      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.exe && .\\${jobId}.exe ${
+        isInput ? `< ${jobId}.txt` : ""
+      }`,
       (error, stdout, stderr) => {
         if (error) {
           reject(error, stderr);

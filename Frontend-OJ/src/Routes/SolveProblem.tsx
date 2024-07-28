@@ -50,12 +50,13 @@ const SolveProblem = () => {
         console.log(error);
         setIsError(true);
         setWhatIsTheError(
-          error.message ||
-            error.response?.data?.error ||
+          error.response?.data?.error ||
+            error.message ||
             "An Unexpected Error Occurred!"
         );
         setTimeout(() => {
           setIsError(false);
+          window.location.href = "/";
         }, 3000);
       }
     };
@@ -69,23 +70,36 @@ const SolveProblem = () => {
 
   const handleRun = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run/${problemId}`,
-      {
-        code,
-        extension: language.extension,
-        language: language.name,
-        input,
-      },
-      { withCredentials: true }
-    );
+    setOutput("Loading...");
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
+        {
+          code,
+          extension: language.extension,
+          language: language.name,
+          input,
+        },
+        { withCredentials: true }
+      );
 
-    setOutput(data.output);
+      setOutput(data.output);
+    } catch (error: any) {
+      setIsError(true);
+      setWhatIsTheError(
+        error.response?.data?.error?.substr(0, 20) ||
+          error.message ||
+          "An Unexpected Error Occurred!"
+      );
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setOutput("Loading...");
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_OJ_BACKEND_URI}/post/submit/${problemId}`,
@@ -97,8 +111,8 @@ const SolveProblem = () => {
     } catch (error: any) {
       setIsError(true);
       setWhatIsTheError(
-        error.message ||
-          error.response?.data?.error ||
+        error.response?.data?.error?.substr(0, 20) ||
+          error.message ||
           "An Unexpected Error Occurred!"
       );
       setTimeout(() => {
@@ -269,9 +283,13 @@ const SolveProblem = () => {
                 <label htmlFor="output">Output</label>
                 <div
                   className={`bg-slate-800 px-2 py-1.5 h-full ${
-                    output && output == "All test cases passed"
+                    !output
+                      ? ""
+                      : output === "All test cases passed"
                       ? "text-green-400"
-                      : "text-red-500"
+                      : output === "Loading..."
+                      ? "text-blue-400"
+                      : "text-red-400"
                   }`}
                   id="output"
                 >
@@ -289,13 +307,13 @@ const SolveProblem = () => {
                 onClick={handleRun}
                 className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
               >
-                Run (Testing Backend)
+                Run
               </button>
               <button
                 onClick={handleSubmit}
                 className="px-2 py-1.5 bg-green-600 border-2 border-green-600 hover:text-green-400 hover:bg-transparent text-white rounded-md"
               >
-                Submit (Testing Backend)
+                Submit
               </button>
             </div>
           </div>

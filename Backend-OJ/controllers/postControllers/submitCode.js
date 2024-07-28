@@ -15,11 +15,7 @@ export const submitCode = async (req, res) => {
     }
 
     const filePath = await generateFile(code, extension, language);
-    const inputPath = await inputFileGenerate(
-      filePath,
-      problem.testCases[0].input.join("\n").trim(),
-      language
-    );
+    const inputPath = await inputFileGenerate(filePath, "", language);
 
     for (const [index, testCase] of problem.testCases.entries()) {
       const output = await checkCase(

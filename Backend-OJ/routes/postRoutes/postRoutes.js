@@ -27,7 +27,7 @@ postRouter.delete(
 
 postRouter.patch("/edit-problem/:problemId", authenticateUser, editProblem);
 
-postRouter.post("/run/:problemId", authenticateUser, runCode);
+postRouter.post("/run", authenticateUser, runCode);
 
 postRouter.post("/submit/:problemId", authenticateUser, submitCode);
 

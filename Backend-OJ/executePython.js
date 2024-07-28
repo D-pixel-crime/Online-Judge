@@ -1,19 +1,20 @@
-import { fileURLToPath } from "url";
 import path from "path";
 import { exec } from "child_process";
+import fs from "fs";
 
-const temp = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(temp);
-
-let pythonDir = path.join(__dirname, "codes");
-pythonDir = path.join(pythonDir, "python");
+const __dirname = path.resolve();
 
 export const executePython = async (filePath) => {
+  const pythonDir = path.join(__dirname, "codes/python");
   const jobId = path.basename(filePath).split(".")[0];
+
+  const isInput = fs.existsSync(`${pythonDir}/${jobId}.txt`);
 
   return new Promise((resolve, reject) => {
     exec(
-      `cd ${pythonDir} && python ${jobId}.py < ${jobId}.txt`,
+      `cd ${pythonDir} && python ${jobId}.py ${
+        isInput ? `< ${jobId}.txt` : ""
+      }`,
       (error, stdout, stderr) => {
         if (error) {
           reject(error, stderr);
