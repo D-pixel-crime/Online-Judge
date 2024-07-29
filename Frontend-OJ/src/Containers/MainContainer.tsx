@@ -28,8 +28,8 @@ const MainContainer = ({ children }: mainContainerProps) => {
 
   return (
     <section className="bg-slate-900 min-h-screen min-w-screen relative">
-      <div className="px-28 flex flex-col gap-24">
-        <nav className="flex-center text-white w-full mt-5 text-xl">
+      <div className="lg:px-28 md:px-10 flex flex-col gap-24">
+        <nav className="flex-center text-white w-full mt-8 lg:text-xl">
           <ul className="w-full flex justify-between items-center">
             <li
               className={`${
@@ -45,7 +45,7 @@ const MainContainer = ({ children }: mainContainerProps) => {
                 Home
               </Link>
             </li>
-            <div className="flex-center gap-10">
+            <div className="flex-center lg:gap-10 sm:gap-5">
               <li
                 className={`${
                   pathname == "/compiler"

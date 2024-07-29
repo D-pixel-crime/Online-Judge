@@ -11,6 +11,7 @@ import { ConfirmationContextProvider } from "./Context/ConfirmationContextProvid
 import SolveProblem from "./Routes/SolveProblem";
 import EditProblem from "./Routes/EditProblem";
 import Compiler from "./Routes/Compiler";
+import Submissions from "./Routes/Submissions";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/add-problem" element={<AddProblem />} />
             <Route path="/edit/problem/:id" element={<EditProblem />} />
             <Route path="/problem/:id" element={<SolveProblem />} />
+            <Route path="/submissions/:userId" element={<Submissions />} />
             <Route path="/compiler" element={<Compiler />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>

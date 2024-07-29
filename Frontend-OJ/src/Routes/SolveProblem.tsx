@@ -70,7 +70,7 @@ const SolveProblem = () => {
 
   const handleRun = async (e: React.FormEvent) => {
     e.preventDefault();
-    setOutput("Loading...");
+    setOutput("Running...");
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
@@ -85,6 +85,11 @@ const SolveProblem = () => {
 
       setOutput(data.output);
     } catch (error: any) {
+      setOutput(
+        error.response?.data?.error?.substr(80) ||
+          error.message ||
+          "An Unexpected Error Occurred!"
+      );
       setIsError(true);
       setWhatIsTheError(
         error.response?.data?.error?.substr(0, 20) ||
@@ -99,7 +104,7 @@ const SolveProblem = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setOutput("Loading...");
+    setOutput("Running...");
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_OJ_BACKEND_URI}/post/submit/${problemId}`,
@@ -107,8 +112,25 @@ const SolveProblem = () => {
         { withCredentials: true }
       );
 
+      console.log(data);
+
       setOutput(data.error || data.success);
+
+      await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
+        {
+          title: problemDetails.title.join(" "),
+          status: data.error || data.success,
+          runtime: data.runtime,
+        },
+        { withCredentials: true }
+      );
     } catch (error: any) {
+      setOutput(
+        error.response?.data?.error?.substr(80) ||
+          error.message ||
+          "An Unexpected Error Occurred!"
+      );
       setIsError(true);
       setWhatIsTheError(
         error.response?.data?.error?.substr(0, 20) ||
@@ -133,8 +155,8 @@ const SolveProblem = () => {
             ))}
           </h1>
         </div>
-        <div className="grid mt-10 mb-5 grid-cols-4 w-full">
-          <div className="col-start-1 col-span-2 break-words mr-10 h-[80vh] overflow-y-auto px-2">
+        <div className="lg:grid mt-10 lg:mb-5 lg:grid-cols-4 w-full">
+          <div className="col-start-1 col-span-2 break-words lg:mr-10 h-[80vh] overflow-y-auto px-2">
             <p className="text-slate-500 mb-5">
               Contributed by : {problemDetails.author.username}
             </p>
@@ -212,7 +234,7 @@ const SolveProblem = () => {
                   ))}
             </div>
           </div>
-          <div className="col-start-3 col-span-2 break-words">
+          <div className="lg:col-start-3 lg:col-span-2 break-words">
             <div className="flex justify-end">
               <select
                 name="lang"
@@ -287,7 +309,7 @@ const SolveProblem = () => {
                       ? ""
                       : output === "All test cases passed"
                       ? "text-green-400"
-                      : output === "Loading..."
+                      : output === "Running..."
                       ? "text-blue-400"
                       : "text-red-400"
                   }`}

@@ -83,13 +83,15 @@ const Profile = () => {
             </li>
             <li className="flex flex-row gap-5">
               <div>Contributed Problems: </div>
-              <div className="grid grid-cols-5 gap-5 w-full">
+              <div className="grid lg:grid-cols-5 sm:grid-cols-2 gap-5 w-full">
                 {userDetails.problems &&
-                  userDetails.problems.map((eachProblem: any) => (
+                  userDetails.problems.map((eachProblem: any, index) => (
                     <div key={eachProblem._id} className="w-fit">
                       <Link
                         to={`/problem/${eachProblem._id}`}
-                        className="flex border-x px-2 border-slate-500 underline text-blue-400 transition-colors hover:text-cyan-300"
+                        className={`col-start-${
+                          index + 1
+                        } flex border-x px-2 border-slate-500 underline text-blue-400 transition-colors hover:text-cyan-300`}
                       >
                         <p className="w-fit">{eachProblem.title}</p>
                         <ExternalLink />
@@ -100,7 +102,14 @@ const Profile = () => {
             </li>
           </ul>
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <Link
+            to={`/submissions/${userId}`}
+            className="flex-center gap-1 px-2 py-2.5 bg-blue-500 border-2 border-blue-500 hover:text-blue-400 hover:bg-transparent rounded-md"
+          >
+            All Submissions
+            <ExternalLink />
+          </Link>
           <button
             onClick={handleLogOut}
             className="px-2 py-1.5 bg-red-500 border-2 border-red-500 hover:text-red-500 hover:bg-transparent rounded-md"

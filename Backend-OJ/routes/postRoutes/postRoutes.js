@@ -8,6 +8,7 @@ import { deleteProblem } from "../../controllers/postControllers/deleteProblem.j
 import { editProblem } from "../../controllers/postControllers/editProblem.js";
 import { runCode } from "../../controllers/postControllers/runCode.js";
 import { submitCode } from "../../controllers/postControllers/submitCode.js";
+import { storeSubmission } from "../../controllers/postControllers/storeSubmission.js";
 
 const postRouter = express.Router();
 
@@ -30,5 +31,7 @@ postRouter.patch("/edit-problem/:problemId", authenticateUser, editProblem);
 postRouter.post("/run", authenticateUser, runCode);
 
 postRouter.post("/submit/:problemId", authenticateUser, submitCode);
+
+postRouter.post("/store-submission", authenticateUser, storeSubmission);
 
 export { postRouter };

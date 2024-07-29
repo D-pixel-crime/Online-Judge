@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import MainContainer from "../Containers/MainContainer";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import axios from "axios";
 import { ConfirmationContext } from "../Context/ConfirmationContextProvider";
@@ -197,6 +197,23 @@ const AddProblem = () => {
                       handleInputChange(index, "output", e.target.value)
                     }
                   />
+                </div>
+                <div className="flex justify-start">
+                  <button
+                    className="px-1.5 py-1.5 flex-center rounded-md bg-red-500 text-white border-2 border-red-500 hover:text-red-500 hover:bg-transparent"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setProblemDetails({
+                        ...problemDetails,
+                        testCases: problemDetails.testCases.filter(
+                          (_, idx) => idx !== index
+                        ),
+                      });
+                      setCount((prev) => prev - 1);
+                    }}
+                  >
+                    <Trash2 />
+                  </button>
                 </div>
               </div>
             ))}

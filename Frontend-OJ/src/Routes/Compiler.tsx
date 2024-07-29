@@ -61,7 +61,7 @@ const Compiler = () => {
             !
           </p>
         </div>
-        <div className="break-words grid grid-cols-3 gap-5 mb-10">
+        <div className="break-words lg:grid grid-cols-3 gap-10 mb-10">
           <div className="col-start-1 col-span-2">
             <div className="flex justify-between">
               <select
@@ -128,7 +128,7 @@ const Compiler = () => {
             />
           </div>
 
-          <div className="w-full h-[90%] flex flex-col mt-14 col-start-3 col-span-1">
+          <div className="w-full lg:h-[90%] flex flex-col lg:mt-14 sm:mt-5 col-start-3 col-span-1">
             <div className="w-full h-full flex flex-col gap-1">
               <label htmlFor="input" className="text-slate-300">
                 Input

@@ -10,16 +10,30 @@ export const checkCase = async (filePath, inputPath, input, language) => {
   try {
     fs.writeFileSync(inputPath, strInput.trim());
 
+    let output;
+    let start, end;
+
     switch (language) {
       case "cpp":
-        return executeCPP(filePath);
+        start = performance.now();
+        output = await executeCPP(filePath);
+        end = performance.now();
+        break;
 
       case "python":
-        return executePython(filePath);
+        start = performance.now();
+        output = await executePython(filePath);
+        end = performance.now();
+        break;
 
       case "javascript":
-        return executeJS(filePath);
+        start = performance.now();
+        output = await executeJS(filePath);
+        end = performance.now();
+        break;
     }
+
+    return { output, runtime: Math.ceil(end - start) };
   } catch (error) {
     return { error };
   }
