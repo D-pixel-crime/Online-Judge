@@ -82,11 +82,11 @@ const Profile = () => {
               <span className="text-slate-400">{userDetails.email}</span>
             </li>
             <li className="flex flex-row gap-5">
-              <div>Contributed Problems: </div>
+              <div>Contributions: </div>
               <div className="grid lg:grid-cols-5 sm:grid-cols-2 gap-5 w-full">
                 {userDetails.problems &&
                   userDetails.problems.map((eachProblem: any, index) => (
-                    <div key={eachProblem._id} className="w-fit">
+                    <div key={eachProblem._id} className="w-fit break-words">
                       <Link
                         to={`/problem/${eachProblem._id}`}
                         className={`col-start-${

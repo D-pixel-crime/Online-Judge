@@ -1,5 +1,5 @@
 # Installing base image
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Setting the working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json .
 
 # Installing dependencies
-RUN npm i && npm i -g nodemon
+RUN npm i
 
 # Installing compilers and interpreters
 RUN apk update && apk add --no-cache g++ make python3 py3-pip
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # Running the backend
-CMD [ "npm","run","dev" ]
+CMD [ "node","index.js" ]

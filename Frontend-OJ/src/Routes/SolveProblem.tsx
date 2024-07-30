@@ -137,6 +137,15 @@ const SolveProblem = () => {
           error.message ||
           "An Unexpected Error Occurred!"
       );
+      await axios.post(
+        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
+        {
+          title: problemDetails.title.join(" "),
+          status: "Runtime Error",
+          runtime: "Not Available",
+        },
+        { withCredentials: true }
+      );
       setTimeout(() => {
         setIsError(false);
       }, 3000);

@@ -60,7 +60,7 @@ const ProblemList = () => {
             />
           </div>
         </div>
-        <table className="mx-5 table">
+        <table className="mx-5 table mb-10">
           <thead className="text-xl bg-slate-700/80">
             <tr>
               <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
