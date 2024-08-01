@@ -12,7 +12,7 @@ export const executeCPP = async (filePath) => {
 
   return new Promise((resolve, reject) => {
     exec(
-      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.exe && .\\${jobId}.exe ${
+      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.out && ./${jobId}.out ${
         isInput ? `< ${jobId}.txt` : ""
       }`,
       (error, stdout, stderr) => {

@@ -15,10 +15,11 @@ const Home = () => {
         <div className="col-start-2 flex flex-col gap-20">
           <div>
             <h1 className="text-4xl">
-              Welcome to{" "}
+              Welcome to &lt;
               <span className="bg-gradient-to-br from-red-400 to-blue-400 via-green-400 bg-clip-text text-transparent w-fit">
                 ThinkXCode
               </span>
+              &gt;
             </h1>
             <p className="text-lg mt-4 text-slate-400">
               Challenge yourself with a wide range of coding problems, and
