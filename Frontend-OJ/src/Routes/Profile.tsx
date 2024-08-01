@@ -52,9 +52,10 @@ const Profile = () => {
   }, []);
 
   const handleLogOut = () => {
-    Cookies.remove("username");
-    Cookies.remove("userId");
-    Cookies.remove("token");
+    const cookieOptions = { secure: true, sameSite: 'Strict' };
+    Cookies.remove('username', cookieOptions);
+    Cookies.remove('userId', cookieOptions);
+    Cookies.remove('token', cookieOptions);
     window.location.href = "/login";
   };
 
