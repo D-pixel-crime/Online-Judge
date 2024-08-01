@@ -5,6 +5,7 @@ import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
+import Cookies, { CookieAttributes } from 'js-cookie';
 
 const Profile = () => {
   const userId = Cookies.get("userId");
@@ -52,7 +53,7 @@ const Profile = () => {
   }, []);
 
   const handleLogOut = () => {
-    const cookieOptions = { secure: true, sameSite: 'Strict' };
+    const cookieOptions:CookieAttributes = { secure: true, sameSite: 'Strict' };
     Cookies.remove('username', cookieOptions);
     Cookies.remove('userId', cookieOptions);
     Cookies.remove('token', cookieOptions);
