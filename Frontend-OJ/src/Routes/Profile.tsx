@@ -5,7 +5,14 @@ import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
-import { CookieAttributes } from 'js-cookie';
+
+type CookieAttributes = {
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: 'Strict' | 'Lax' | 'None';
+};
 
 const Profile = () => {
   const userId = Cookies.get("userId");
