@@ -60,7 +60,7 @@ const Profile = () => {
   }, []);
 
   const handleLogOut = () => {
-    const cookieOptions:CookieAttributes = { secure: true, sameSite: 'Strict' };
+    const cookieOptions:CookieAttributes = { secure: true, sameSite: 'Strict', domain: ".thinkxcode.online" };
     Cookies.remove('username', cookieOptions);
     Cookies.remove('userId', cookieOptions);
     Cookies.remove('token', cookieOptions);
