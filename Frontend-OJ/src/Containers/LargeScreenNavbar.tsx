@@ -14,7 +14,7 @@ const LargeScreenNavbar = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="flex-center text-white w-full mt-8 lg:text-xl">
+    <nav className="flex-center text-white w-full mt-8 lg:text-xl max-sm:hidden">
       <ul className="w-full flex justify-between items-center">
         <li
           className={`${
@@ -48,23 +48,25 @@ const LargeScreenNavbar = () => {
               <p>Compiler</p>
             </Link>
           </li>
-          <li
-            className={`${
-              pathname == "/add-problem"
-                ? "border-b-4 hover:cursor-default py-1"
-                : "hover:text-slate-400 transition hover:-translate-y-[5%]"
-            } border-yellow-400`}
-          >
-            <Link
-              to="/add-problem"
+          {username && (
+            <li
               className={`${
-                pathname == "/add-problem" ? "hover:cursor-default" : ""
-              }  flex-center gap-1.5`}
+                pathname == "/add-problem"
+                  ? "border-b-4 hover:cursor-default py-1"
+                  : "hover:text-slate-400 transition hover:-translate-y-[5%]"
+              } border-yellow-400`}
             >
-              <PlusCircle />
-              <p>Add-Problem</p>
-            </Link>
-          </li>
+              <Link
+                to="/add-problem"
+                className={`${
+                  pathname == "/add-problem" ? "hover:cursor-default" : ""
+                }  flex-center gap-1.5`}
+              >
+                <PlusCircle />
+                <p>Add-Problem</p>
+              </Link>
+            </li>
+          )}
           <li
             className={`${
               pathname == "/all/problems"

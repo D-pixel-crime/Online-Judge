@@ -6,6 +6,7 @@ import linkedInProf from "../assets/linkedin-icon.svg";
 import instagramProf from "../assets/instagram.svg";
 import discordProf from "../assets/discord.svg";
 import LargeScreenNavbar from "./LargeScreenNavbar";
+import MobileScreenNavbar from "./MobileScreenNavbar";
 
 interface mainContainerProps {
   children: React.ReactNode;
@@ -19,11 +20,12 @@ const MainContainer = ({ children }: mainContainerProps) => {
 
   return (
     <section className="bg-slate-900 min-h-screen min-w-screen relative">
-      <div className="lg:px-28 md:px-10 flex flex-col gap-24">
+      <div className="lg:px-28 md:px-10 flex flex-col gap-24 relative max-sm:px-5">
         <LargeScreenNavbar />
+        <MobileScreenNavbar />
         <div className="content w-full h-full mb-10">{children}</div>
       </div>
-      <div className="contact-us flex-center mt-20 absolute bottom-0">
+      <div className="contact-us flex-center mt-20 absolute bottom-0 max-sm:left-1/2">
         <div className="flex-center flex-col gap-2 bg-slate-900/70 border-t-2 border-slate-500 rounded-t-full px-8 py-1.5">
           <h2 className="text-slate-300 text-sm">Contact-Us</h2>
           <div className="flex gap-5">

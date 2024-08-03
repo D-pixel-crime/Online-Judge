@@ -116,13 +116,13 @@ const Compiler = () => {
                   },
                 });
                 editor.updateOptions({
-                  wordWrap: "on",
                   theme: "myCustomTheme",
+                  fontSize: 17.5,
                 });
               }}
               options={{
                 minimap: {
-                  enabled: true,
+                  enabled: false,
                 },
               }}
             />
