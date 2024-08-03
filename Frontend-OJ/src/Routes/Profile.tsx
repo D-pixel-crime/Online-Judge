@@ -59,7 +59,7 @@ const Profile = () => {
     fetchUserDetails();
   }, []);
 
-  const handleLogOut = async () => {
+  const handleLogOut = () => {
     const cookieOptions: CookieAttributes = {
       secure: true,
       sameSite: "Strict",
