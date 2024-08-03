@@ -164,7 +164,7 @@ const SolveProblem = () => {
             ))}
           </h1>
         </div>
-        <div className="lg:grid mt-10 lg:mb-5 lg:grid-cols-4 w-full">
+        <div className="lg:grid lg:mt-10 lg:mb-5 lg:grid-cols-4 w-full">
           <div className="col-start-1 col-span-2 break-words lg:mr-10 h-[80vh] overflow-y-auto px-2">
             <p className="text-slate-500 mb-5">
               Contributed by : {problemDetails.author.username}

@@ -4,7 +4,7 @@ import homeImage from "../assets/landing_code.svg";
 const Home = () => {
   return (
     <MainContainer>
-      <div className="text-white sm:grid grid-cols-2 gap-20 mt-10">
+      <div className="text-white sm:grid grid-cols-2 gap-20 sm:mt-10 mt-2">
         <img
           src={homeImage}
           alt="home"
