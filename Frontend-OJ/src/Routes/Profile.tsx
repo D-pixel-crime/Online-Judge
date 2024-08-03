@@ -6,6 +6,14 @@ import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 
+type CookieAttributes = {
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: "Strict" | "Lax" | "None";
+};
+
 const Profile = () => {
   const userId = Cookies.get("userId");
 
@@ -51,10 +59,15 @@ const Profile = () => {
     fetchUserDetails();
   }, []);
 
-  const handleLogOut = () => {
-    Cookies.remove("username");
-    Cookies.remove("userId");
-    Cookies.remove("token");
+  const handleLogOut = async () => {
+    const cookieOptions: CookieAttributes = {
+      secure: true,
+      sameSite: "Strict",
+      domain: ".thinkxcode.online",
+    };
+    Cookies.remove("username", cookieOptions);
+    Cookies.remove("userId", cookieOptions);
+    Cookies.remove("token", cookieOptions);
     window.location.href = "/login";
   };
 

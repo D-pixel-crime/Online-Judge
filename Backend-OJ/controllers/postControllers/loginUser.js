@@ -30,12 +30,21 @@ export const loginUser = async (req, res) => {
 
     res.cookie("username", username, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
+      sameSite: "None",
+      secure: true,
+      domain: ".thinkxcode.online",
     });
     res.cookie("userId", stringUserId, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
+      sameSite: "None",
+      secure: true,
+      domain: ".thinkxcode.online",
     });
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
+      sameSite: "None",
+      secure: true,
+      domain: ".thinkxcode.online",
     });
 
     return res.status(200).json({ token });
