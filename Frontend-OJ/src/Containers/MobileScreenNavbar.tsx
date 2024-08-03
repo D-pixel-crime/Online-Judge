@@ -11,7 +11,7 @@ const MobileScreenNavbar = () => {
   return (
     <>
       <nav className="text-white flex-center w-full mt-8 sm:hidden">
-        <ul className="flex justify-between w-full">
+        <ul className="flex items-center justify-between w-full">
           <li
             className={`${
               pathname == "/"

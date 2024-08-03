@@ -24,7 +24,7 @@ const SideBar = ({ isSideBarOpen, setIsSideBarOpen }: sidebarProps) => {
     <div
       className={`fixed top-0 right-0 h-screen w-1/2 bg-slate-800 z-40 text-white ${
         !isSideBarOpen ? "translate-x-[100%]" : "translate-x-0"
-      } transition-transform duration-500 px-4 py-2 sm:hidden`}
+      } transition-transform duration-500 px-4 py-2 sm:hidden shadow-lg shadow-black`}
     >
       <X
         onClick={() => setIsSideBarOpen(false)}
