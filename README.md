@@ -3,7 +3,7 @@
 ThinkXCode Online Judge is a platform for compiling and executing code submissions in various programming languages. It provides a seamless interface for users to submit their code, test it against various test cases, and receive feedback in real-time.
 
 
-!["ThinkXCode" Online Judge Screenshot](frontend/src/assets/thinkxcode.png)
+!["ThinkXCode" Online Judge Screenshot](Frontend-OJ/src/assets/thinkxcode.png)
 
 ## Table of Contents
 
