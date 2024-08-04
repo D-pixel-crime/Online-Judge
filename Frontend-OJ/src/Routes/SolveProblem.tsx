@@ -289,8 +289,9 @@ const SolveProblem = () => {
                   },
                 });
                 editor.updateOptions({
-                  wordWrap: "on",
+                  wordWrap: "off",
                   theme: "myCustomTheme",
+                  fontSize: 17.5,
                 });
               }}
               options={{
