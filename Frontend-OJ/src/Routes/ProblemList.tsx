@@ -44,7 +44,7 @@ const ProblemList = () => {
   return (
     <MainContainer>
       <div className="flex flex-col gap-10 text-xl text-white">
-        <div className="flex justify-between items-center border-b-2 border-slate-600 pb-4">
+        <div className="flex max-sm:flex-col max-sm:gap-3 justify-between items-center border-b-2 border-slate-600 pb-4">
           <h1 className="bg-gradient-to-tl w-fit from-green-500 via-yellow-200 to-green-500 bg-clip-text text-transparent text-4xl">
             Problem-Set
           </h1>
