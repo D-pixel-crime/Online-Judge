@@ -12,7 +12,7 @@ ThinkXCode Online Judge is a platform for compiling and executing code submissio
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [Usage](#usage)
-- [License](#license)
+- [Contact](#Contact)
 
 ## Features
 
