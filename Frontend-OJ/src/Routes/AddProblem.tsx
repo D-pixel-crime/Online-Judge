@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import MainContainer from "../Containers/MainContainer";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { ErrorContext } from "../Context/ErrorContextProvider";
 import axios from "axios";
 import { ConfirmationContext } from "../Context/ConfirmationContextProvider";
+import Cookies from "js-cookie";
 
 const AddProblem = () => {
   const [problemDetails, setProblemDetails] = useState({
@@ -21,6 +22,13 @@ const AddProblem = () => {
   const { setIsError, setWhatIsTheError } = errorContext!;
   const confirmContext = useContext(ConfirmationContext);
   const { setIsConfirmed } = confirmContext!;
+  const username = Cookies.get("token");
+
+  useLayoutEffect(() => {
+    if (!username) {
+      window.location.href = "/login";
+    }
+  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
