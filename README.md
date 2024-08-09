@@ -67,7 +67,7 @@ Follow these instructions to set up and run "ThinkXCode" Online Judge on your lo
     Create a `.env` file in the `backend` directory and add the following:
 
     ```plaintext
-    PORT=3000
+    OJ_FRONTEND_URI = http://localhost:5173
     MONGO_URI=your_mongodb_uri
     JWT_SECRET=your_jwt_secret
     ```
