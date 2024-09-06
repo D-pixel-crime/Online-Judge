@@ -5,6 +5,7 @@ import { ErrorContext } from "../Context/ErrorContextProvider";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import Cookies from "js-cookie";
+import { MagnifyingGlass } from "react-loader-spinner";
 
 const ProblemList = () => {
   const [problems, setProblems] = useState([]);
@@ -12,33 +13,39 @@ const ProblemList = () => {
   const { setIsError, setWhatIsTheError } = errorContext!;
   const [search, setSearch] = useState("");
   const currUsername = Cookies.get("username");
+  const [isSearch, setIsSearch] = useState(false);
 
   useLayoutEffect(() => {
     handleSearch();
   }, [search]);
 
   const handleSearch = async () => {
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/search-problems`,
-        { search },
-        { withCredentials: true }
-      );
-      console.log(data.problems);
+    setIsSearch(true);
+    setTimeout(async () => {
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/search-problems`,
+          { search },
+          { withCredentials: true }
+        );
+        console.log(data.problems);
 
-      setProblems(data.problems);
-    } catch (error: any) {
-      console.log(error);
-      setIsError(true);
-      setWhatIsTheError(
-        error.response?.data?.error ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    }
+        setProblems(data.problems);
+      } catch (error: any) {
+        console.log(error);
+        setIsError(true);
+        setWhatIsTheError(
+          error.response?.data?.error ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
+      } finally {
+        setIsSearch(false);
+      }
+    }, 250);
   };
 
   return (
@@ -60,54 +67,65 @@ const ProblemList = () => {
             />
           </div>
         </div>
-        <table className="mx-5 table mb-10">
-          <thead className="text-xl bg-slate-700/80">
-            <tr>
-              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
-                Title
-              </th>
-              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
-                Author
-              </th>
-              <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
-                Access Link
-              </th>
-            </tr>
-          </thead>
-          <tbody className="text-base bg-slate-800">
-            {problems.map((eachProblem: any) => (
-              <tr key={eachProblem._id} className="border-2 border-slate-500">
-                <td className="border-2 border-slate-500 px-4 py-2">
-                  {eachProblem.title}
-                  {eachProblem.author.username === currUsername && (
-                    <div className="flex justify-end text-sm">
-                      <Link
-                        to={`/edit/problem/${eachProblem._id}`}
-                        className="flex-center w-fit text-red-500 hover:text-red-300"
-                      >
-                        (Edit/Delete)
-                      </Link>
-                    </div>
-                  )}
-                </td>
-                <td className="border-2 border-slate-500 px-4 py-2 text-violet-300">
-                  {eachProblem.author.username.length > 15
-                    ? eachProblem.author.username.slice(0, 15) + "..."
-                    : eachProblem.author.username}
-                </td>
-                <td className="px-4 py-2 flex justify-end items-center">
-                  <Link
-                    to={`/problem/${eachProblem._id}`}
-                    className="flex underline text-blue-500 hover:text-cyan-300 w-fit"
-                  >
-                    <p className="mr-1">Solve</p>
-                    <ExternalLink />
-                  </Link>
-                </td>
+        {isSearch ? (
+          <div className="flex-center">
+            <MagnifyingGlass
+              visible={true}
+              width={80}
+              height={80}
+              wrapperClass="flex-center"
+            />
+          </div>
+        ) : (
+          <table className="mx-5 table mb-10">
+            <thead className="text-xl bg-slate-700/80">
+              <tr>
+                <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
+                  Title
+                </th>
+                <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
+                  Author
+                </th>
+                <th className="border-2 border-slate-500 px-4 py-2 text-yellow-400">
+                  Access Link
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-base bg-slate-800">
+              {problems.map((eachProblem: any) => (
+                <tr key={eachProblem._id} className="border-2 border-slate-500">
+                  <td className="border-2 border-slate-500 px-4 py-2">
+                    {eachProblem.title}
+                    {eachProblem.author.username === currUsername && (
+                      <div className="flex justify-end text-sm">
+                        <Link
+                          to={`/edit/problem/${eachProblem._id}`}
+                          className="flex-center w-fit text-red-500 hover:text-red-300"
+                        >
+                          (Edit/Delete)
+                        </Link>
+                      </div>
+                    )}
+                  </td>
+                  <td className="border-2 border-slate-500 px-4 py-2 text-violet-300">
+                    {eachProblem.author.username.length > 15
+                      ? eachProblem.author.username.slice(0, 15) + "..."
+                      : eachProblem.author.username}
+                  </td>
+                  <td className="px-4 py-2 flex justify-end items-center">
+                    <Link
+                      to={`/problem/${eachProblem._id}`}
+                      className="flex underline text-blue-500 hover:text-cyan-300 w-fit"
+                    >
+                      <p className="mr-1">Solve</p>
+                      <ExternalLink />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </MainContainer>
   );

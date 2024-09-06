@@ -12,14 +12,18 @@ export const executeCPP = async (filePath) => {
 
   return new Promise((resolve, reject) => {
     exec(
-      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.out && ./${jobId}.out ${
+      `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.out && .//${jobId}.out ${
         isInput ? `< ${jobId}.txt` : ""
       }`,
+      { timeout: 5000 },
       (error, stdout, stderr) => {
         if (error) {
-          reject(error, stderr);
-        }
-        if (stderr) {
+          if (error.killed) {
+            reject("Time Limit Exceeded");
+          } else {
+            reject(error, stderr);
+          }
+        } else if (stderr) {
           reject(stderr);
         }
         resolve(stdout);

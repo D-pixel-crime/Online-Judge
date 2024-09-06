@@ -1,9 +1,10 @@
 import { Editor } from "@monaco-editor/react";
 import { supportedLanguages } from "../constants/boiler_plate";
 import MainContainer from "../Containers/MainContainer";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { ErrorContext } from "../Context/ErrorContextProvider";
+import { Oval } from "react-loader-spinner";
 
 const Compiler = () => {
   const [language, setLanguage] = React.useState(supportedLanguages[0]);
@@ -13,6 +14,7 @@ const Compiler = () => {
   const [code, setCode] = React.useState<string | undefined>();
   const errorContext = React.useContext(ErrorContext);
   const { setIsError, setWhatIsTheError } = errorContext!;
+  const [isRun, setIsRun] = useState(false);
 
   React.useEffect(() => {
     setCode(language.boilerPlate);
@@ -20,36 +22,41 @@ const Compiler = () => {
 
   const handleRun = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsRun(true);
     setOutput("Running...");
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
-        {
-          code,
-          extension: language.extension,
-          language: language.name,
-          input,
-        },
-        { withCredentials: true }
-      );
+    setTimeout(async () => {
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
+          {
+            code,
+            extension: language.extension,
+            language: language.name,
+            input,
+          },
+          { withCredentials: true }
+        );
 
-      setOutput(data.output);
-    } catch (error: any) {
-      setOutput(
-        error.response?.data?.error.substr(80) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setIsError(true);
-      setWhatIsTheError(
-        error.response?.data?.error?.substr(0, 20) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    }
+        setOutput(data.output);
+      } catch (error: any) {
+        setOutput(
+          error.response?.data?.error ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setIsError(true);
+        setWhatIsTheError(
+          error.response?.data?.error?.substr(0, 20) ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
+      } finally {
+        setIsRun(false);
+      }
+    }, 500);
   };
 
   return (
@@ -85,14 +92,26 @@ const Compiler = () => {
               <div className="flex mb-5">
                 <button
                   onClick={handleRun}
-                  className="px-3 py-1.5 h-fit bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
+                  className={`px-3 py-1.5 h-fit ${
+                    isRun ? "bg-transparent" : "bg-violet-500"
+                  } border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md`}
+                  disabled={isRun}
                 >
-                  Run
+                  {isRun ? (
+                    <Oval
+                      visible={true}
+                      height={30}
+                      width={30}
+                      color="violet"
+                    />
+                  ) : (
+                    "Run"
+                  )}
                 </button>
               </div>
             </div>
             <Editor
-              className="border-2 border-slate-700"
+              className="border-2 border-slate-700 text-white"
               theme="vs-dark"
               height="80vh"
               width="100%"

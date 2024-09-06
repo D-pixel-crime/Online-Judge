@@ -4,12 +4,14 @@ import { executeCPP } from "../../executeCPP.js";
 import { executePython } from "../../executePython.js";
 import { executeJS } from "../../executeJS.js";
 import { inputFileGenerate } from "../../inputFileGenerate.js";
+import { deleteFile } from "../../deleteFile.js";
 
 export const runCode = async (req, res) => {
   const { code, extension, language, input } = req.body;
+  let filePath;
 
   try {
-    const filePath = await generateFile(code, extension, language, input);
+    filePath = await generateFile(code, extension, language, input);
     if (input) await inputFileGenerate(filePath, input, language);
 
     let output;
@@ -27,13 +29,18 @@ export const runCode = async (req, res) => {
         break;
     }
 
+    deleteFile(filePath, input, language);
+
     if (output.error) {
-      return res.status(500).json({ error: output.error.message });
+      return res.status(500).json({ error: output.error });
     }
 
     res.status(200).json({ output });
   } catch (error) {
+    deleteFile(filePath, input, language);
     console.log(error);
-    res.status(500).json({ error: error.message });
+    if (error === "Time Limit Exceeded")
+      return res.status(500).json({ error: "Time Limit Exceeded" });
+    return res.status(500).json({ error: error.message });
   }
 };

@@ -3,6 +3,7 @@ import { CircleCheckBig, CircleX } from "lucide-react";
 import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { TailSpin } from "react-loader-spinner";
 
 const Signup = () => {
   useLayoutEffect(() => {
@@ -19,11 +20,11 @@ const Signup = () => {
     username: "",
     password: "",
   });
-
   const [isFilled, setIsFilled] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [whatIsTheError, setWhatIsTheError] = useState("");
+  const [isSignup, setIsSignup] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,32 +43,42 @@ const Signup = () => {
       return;
     }
 
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
-        userDetails,
-        {
-          withCredentials: true,
-        }
-      );
+    setTimeout(async () => {
+      setIsSignup(true);
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/register`,
+          userDetails,
+          {
+            withCredentials: true,
+          }
+        );
 
-      if (data.token) {
-        setUserDetails({ username: "", password: "", email: "", fullName: "" });
-        setIsSuccess(true);
+        if (data.token) {
+          setUserDetails({
+            username: "",
+            password: "",
+            email: "",
+            fullName: "",
+          });
+          setIsSuccess(true);
+          setTimeout(() => {
+            setIsSuccess(false);
+            window.location.href = "/";
+          }, 3000);
+        }
+      } catch (error: any) {
+        setWhatIsTheError(
+          error.response?.data?.error || "An Unexpected Error Occurred!"
+        );
+        setIsError(true);
         setTimeout(() => {
-          setIsSuccess(false);
-          window.location.href = "/";
+          setIsError(false);
         }, 3000);
+      } finally {
+        setIsSignup(false);
       }
-    } catch (error: any) {
-      setWhatIsTheError(
-        error.response?.data?.error || "An Unexpected Error Occurred!"
-      );
-      setIsError(true);
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    }
+    }, 500);
   };
 
   return (
@@ -149,9 +160,21 @@ const Signup = () => {
           </div>
           <button
             type="submit"
-            className="bg-green-500 border-2 my-4 w-full border-green-500 text-white text-lg rounded-md px-2 py-1.5 hover:bg-transparent hover:text-green-500"
+            className={`${
+              isSignup ? "bg-transparent" : "bg-green-500"
+            } border-2 my-4 w-full border-green-500 text-white text-lg rounded-md px-2 py-1.5 hover:bg-transparent hover:text-green-500`}
+            disabled={isSignup}
           >
-            Signup
+            {isSignup ? (
+              <TailSpin
+                visible={true}
+                height={25}
+                width={25}
+                wrapperClass="flex-center text-blue-500"
+              />
+            ) : (
+              "Submit"
+            )}
           </button>
           <div className="flex-center flex-col border-t-2 pt-6 gap-2">
             <p>Already have an account? Login instead!</p>

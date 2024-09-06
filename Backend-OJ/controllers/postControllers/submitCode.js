@@ -6,10 +6,13 @@ import { inputFileGenerate } from "../../inputFileGenerate.js";
 import { executeCPP } from "../../executeCPP.js";
 import { executePython } from "../../executePython.js";
 import { executeJS } from "../../executeJS.js";
+import { deleteFile } from "../../deleteFile.js";
 
 export const submitCode = async (req, res) => {
   const { code, extension, language } = req.body;
   const { problemId } = req.params;
+
+  let filePath, inputPath;
 
   try {
     const problem = await Problem.findById(problemId);
@@ -17,8 +20,8 @@ export const submitCode = async (req, res) => {
       return res.status(404).json({ error: "Problem not found" });
     }
 
-    const filePath = await generateFile(code, extension, language);
-    const inputPath = await inputFileGenerate(filePath, "", language);
+    filePath = await generateFile(code, extension, language);
+    inputPath = await inputFileGenerate(filePath, "", language);
 
     let maxTime = 0;
 
@@ -51,6 +54,8 @@ export const submitCode = async (req, res) => {
           break;
       }
 
+      deleteFile(filePath, inputPath, language);
+
       if (output.error) {
         return res.status(500).json({ error: output.error.message });
       }
@@ -72,6 +77,10 @@ export const submitCode = async (req, res) => {
       runtime: `${Math.ceil(maxTime)} ms`,
     });
   } catch (error) {
+    deleteFile(filePath, inputPath, language);
+
+    if (error === "Time Limit Exceeded")
+      return res.status(500).json({ error: "Time Limit Exceeded" });
     console.log(`Error submitting code: ${error}`.bgRed);
     return res.status(500).json({ error: error.message });
   }

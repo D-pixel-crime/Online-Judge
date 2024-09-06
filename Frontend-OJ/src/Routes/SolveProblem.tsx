@@ -11,6 +11,7 @@ import { ErrorContext } from "../Context/ErrorContextProvider";
 import axios from "axios";
 import { Editor } from "@monaco-editor/react";
 import { supportedLanguages } from "../constants/boiler_plate";
+import { Oval } from "react-loader-spinner";
 
 const SolveProblem = () => {
   const problemId = useParams().id;
@@ -29,6 +30,8 @@ const SolveProblem = () => {
   const [language, setLanguage] = useState(supportedLanguages[0]);
   const [output, setOutput] = useState<string | undefined>();
   const [input, setInput] = useState<string | undefined>(``);
+  const [isRun, setIsRun] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   useLayoutEffect(() => {
     const fetchProblemDetails = async () => {
@@ -70,86 +73,96 @@ const SolveProblem = () => {
 
   const handleRun = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsRun(true);
     setOutput("Running...");
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
-        {
-          code,
-          extension: language.extension,
-          language: language.name,
-          input,
-        },
-        { withCredentials: true }
-      );
+    setTimeout(async () => {
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/run`,
+          {
+            code,
+            extension: language.extension,
+            language: language.name,
+            input,
+          },
+          { withCredentials: true }
+        );
 
-      setOutput(data.output);
-    } catch (error: any) {
-      setOutput(
-        error.response?.data?.error?.substr(80) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setIsError(true);
-      setWhatIsTheError(
-        error.response?.data?.error?.substr(0, 20) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    }
+        setOutput(data.output);
+      } catch (error: any) {
+        setOutput(
+          error.response?.data?.error ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setIsError(true);
+        setWhatIsTheError(
+          error.response?.data?.error?.substr(0, 20) ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
+      } finally {
+        setIsRun(false);
+      }
+    }, 500);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setOutput("Running...");
-    try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/submit/${problemId}`,
-        { language: language.name, code, extension: language.extension },
-        { withCredentials: true }
-      );
+    setIsSubmit(true);
+    setOutput("Submitting...");
+    setTimeout(async () => {
+      try {
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/submit/${problemId}`,
+          { language: language.name, code, extension: language.extension },
+          { withCredentials: true }
+        );
 
-      console.log(data);
+        console.log(data);
 
-      setOutput(data.error || data.success);
+        setOutput(data.error || data.success);
 
-      await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
-        {
-          title: problemDetails.title.join(" "),
-          status: data.error || data.success,
-          runtime: data.runtime,
-        },
-        { withCredentials: true }
-      );
-    } catch (error: any) {
-      setOutput(
-        error.response?.data?.error?.substr(80) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      setIsError(true);
-      setWhatIsTheError(
-        error.response?.data?.error?.substr(0, 20) ||
-          error.message ||
-          "An Unexpected Error Occurred!"
-      );
-      await axios.post(
-        `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
-        {
-          title: problemDetails.title.join(" "),
-          status: "Runtime Error",
-          runtime: "Not Available",
-        },
-        { withCredentials: true }
-      );
-      setTimeout(() => {
-        setIsError(false);
-      }, 3000);
-    }
+        await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
+          {
+            title: problemDetails.title.join(" "),
+            status: data.error || data.success,
+            runtime: data.runtime,
+          },
+          { withCredentials: true }
+        );
+      } catch (error: any) {
+        setOutput(
+          error.response?.data?.error ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        setIsError(true);
+        setWhatIsTheError(
+          error.response?.data?.error?.substr(0, 20) ||
+            error.message ||
+            "An Unexpected Error Occurred!"
+        );
+        await axios.post(
+          `${import.meta.env.VITE_OJ_BACKEND_URI}/post/store-submission`,
+          {
+            title: problemDetails.title.join(" "),
+            status: "Runtime Error",
+            runtime: "Not Available",
+          },
+          { withCredentials: true }
+        );
+        setTimeout(() => {
+          setIsError(false);
+        }, 3000);
+      } finally {
+        setIsSubmit(false);
+      }
+    }, 500);
   };
 
   return (
@@ -337,15 +350,29 @@ const SolveProblem = () => {
             <div className="flex justify-between mt-5">
               <button
                 onClick={handleRun}
-                className="px-2 py-1.5 bg-violet-500 border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md"
+                className={`px-2 py-1.5 ${
+                  isRun ? "bg-transparent" : "bg-violet-500"
+                } border-2 border-violet-500 hover:text-violet-400 hover:bg-transparent text-white rounded-md`}
+                disabled={isSubmit}
               >
-                Run
+                {isRun ? (
+                  <Oval visible={true} height={30} width={30} color="violet" />
+                ) : (
+                  "Run"
+                )}
               </button>
               <button
                 onClick={handleSubmit}
-                className="px-2 py-1.5 bg-green-600 border-2 border-green-600 hover:text-green-400 hover:bg-transparent text-white rounded-md"
+                className={`px-2 py-1.5 ${
+                  isSubmit ? "bg-transparent" : "bg-green-500"
+                } border-2 border-green-600 hover:text-green-400 hover:bg-transparent text-white rounded-md`}
+                disabled={isRun}
               >
-                Submit
+                {isSubmit ? (
+                  <Oval visible={true} height={30} width={30} color="green" />
+                ) : (
+                  "Submit"
+                )}
               </button>
             </div>
           </div>

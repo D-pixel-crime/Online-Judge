@@ -15,11 +15,15 @@ export const executePython = async (filePath) => {
       `cd ${pythonDir} && python ${jobId}.py ${
         isInput ? `< ${jobId}.txt` : ""
       }`,
+      { timeout: 5000 },
       (error, stdout, stderr) => {
         if (error) {
-          reject(error, stderr);
-        }
-        if (stderr) {
+          if (error.killed) {
+            reject("Time Limit Exceeded");
+          } else {
+            reject(error, stderr);
+          }
+        } else if (stderr) {
           reject(stderr);
         }
         resolve(stdout);
