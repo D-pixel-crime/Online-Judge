@@ -63,7 +63,7 @@ const Profile = () => {
     const cookieOptions: CookieAttributes = {
       secure: true,
       sameSite: "Strict",
-      // domain: ".thinkxcode.online",
+      domain: ".thinkxcode.online",
     };
     Cookies.remove("username", cookieOptions);
     Cookies.remove("userId", cookieOptions);
