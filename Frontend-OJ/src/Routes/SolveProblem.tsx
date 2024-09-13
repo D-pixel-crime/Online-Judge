@@ -14,6 +14,7 @@ import { supportedLanguages } from "../constants/boiler_plate";
 import { Oval } from "react-loader-spinner";
 
 const SolveProblem = () => {
+  const [isInput, setIsInput] = useState(true);
   const problemId = useParams().id;
   const [problemDetails, setProblemDetails] = useState({
     title: [""],
@@ -106,6 +107,7 @@ const SolveProblem = () => {
         }, 3000);
       } finally {
         setIsRun(false);
+        setIsInput(false);
       }
     }, 500);
   };
@@ -161,6 +163,7 @@ const SolveProblem = () => {
         }, 3000);
       } finally {
         setIsSubmit(false);
+        setIsInput(false);
       }
     }, 500);
   };
@@ -314,37 +317,62 @@ const SolveProblem = () => {
               }}
             />
 
-            <div className="input-and-output w-full flex gap-2 my-5">
-              <div className="w-full flex flex-col gap-1">
-                <label htmlFor="input">Input</label>
-                <textarea
-                  className="bg-slate-800 px-2 py-1.5 text-slate-300 w-full outline-none"
-                  id="input"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
-              </div>
-              <div className="w-full flex flex-col gap-1">
-                <label htmlFor="output">Output</label>
-                <div
-                  className={`bg-slate-800 px-2 py-1.5 h-full ${
-                    !output
-                      ? ""
-                      : output === "All test cases passed"
-                      ? "text-green-400"
-                      : output === "Running..."
-                      ? "text-blue-400"
-                      : "text-red-400"
-                  }`}
-                  id="output"
+            <div className="input-and-output w-full flex flex-col my-5">
+              <div className="w-full flex">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsInput(true);
+                  }}
+                  className={`${
+                    isInput &&
+                    "bg-slate-800 border-t-2 border-slate-700 border-x-2"
+                  } px-4 py-2.5 rounded-t-lg`}
                 >
-                  {output?.split("\n").map((eachLine, index) => (
-                    <React.Fragment key={index + 1000}>
-                      {eachLine}
-                      {index < output.split("\n").length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </div>
+                  Input
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsInput(false);
+                  }}
+                  className={`${
+                    !isInput &&
+                    "bg-slate-800 border-t-2 border-slate-700 border-x-2"
+                  } px-4 py-2.5 rounded-t-lg`}
+                >
+                  Output
+                </button>
+              </div>
+              <div className="w-full">
+                {isInput ? (
+                  <textarea
+                    className="bg-slate-800 px-2 py-1.5 text-slate-300 w-full outline-none border-2 border-slate-700 rounded-b-lg"
+                    id="input"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                ) : (
+                  <div
+                    className={`bg-slate-800 px-2 py-1.5 h-full ${
+                      !output
+                        ? ""
+                        : output === "All test cases passed"
+                        ? "text-green-400"
+                        : output === "Running..."
+                        ? "text-blue-400"
+                        : "text-red-400"
+                    } min-h-16 border-2 border-slate-700 rounded-lg`}
+                    id="output"
+                  >
+                    {output?.split("\n").map((eachLine, index) => (
+                      <React.Fragment key={index + 1000}>
+                        {eachLine}
+                        {index < output.split("\n").length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex justify-between mt-5">
