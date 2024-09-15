@@ -54,8 +54,6 @@ export const submitCode = async (req, res) => {
           break;
       }
 
-      deleteFile(filePath, inputPath, language);
-
       if (output.error) {
         return res.status(500).json({ error: output.error.message });
       }
@@ -71,6 +69,8 @@ export const submitCode = async (req, res) => {
 
       console.log(output.bgGreen);
     }
+
+    deleteFile(filePath, inputPath, language);
 
     return res.status(200).json({
       success: "All test cases passed",
