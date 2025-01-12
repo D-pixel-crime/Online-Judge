@@ -2,7 +2,7 @@ import "colors";
 import { Problem } from "../../models/Problem.js";
 
 export const createProblem = async (req, res) => {
-  const { title, description, testCases } = req.body;
+  const { title, description, testCases, timeLimit } = req.body;
   const userId = req.cookies.userId;
   if (
     JSON.stringify(testCases[testCases.length - 1].input) ===
@@ -18,6 +18,7 @@ export const createProblem = async (req, res) => {
       title,
       description,
       testCases,
+      timeLimit,
       author: userId,
     });
 

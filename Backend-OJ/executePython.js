@@ -4,7 +4,7 @@ import fs from "fs";
 
 const __dirname = path.resolve();
 
-export const executePython = async (filePath) => {
+export const executePython = async (filePath, timeLimit = 1) => {
   const pythonDir = path.join(__dirname, "codes/python");
   const jobId = path.basename(filePath).split(".")[0];
 
@@ -15,7 +15,7 @@ export const executePython = async (filePath) => {
       `cd ${pythonDir} && python ${jobId}.py ${
         isInput ? `< ${jobId}.txt` : ""
       }`,
-      { timeout: 5000 },
+      { timeout: timeLimit * 1000 },
       (error, stdout, stderr) => {
         if (error) {
           if (error.killed) {

@@ -8,7 +8,6 @@ export const deleteFile = async (filePath, input, language) => {
 
   try {
     fs.unlinkSync(filePath);
-
     if (input) {
       const inputPath = path.join(
         langDir,

@@ -4,7 +4,7 @@ import fs from "fs";
 
 const __dirname = path.resolve();
 
-export const executeJS = async (filePath) => {
+export const executeJS = async (filePath, timeLimit = 1) => {
   const jsDir = path.join(__dirname, "codes/javascript");
   const jobId = path.basename(filePath).split(".")[0];
 
@@ -13,7 +13,7 @@ export const executeJS = async (filePath) => {
   return new Promise((resolve, reject) => {
     exec(
       `cd ${jsDir} && node ${jobId}.js ${isInput ? `< ${jobId}.txt` : ""}`,
-      { timeout: 5000 },
+      { timeout: timeLimit * 1000 },
       (error, stdout, stderr) => {
         if (error) {
           if (error.killed) {

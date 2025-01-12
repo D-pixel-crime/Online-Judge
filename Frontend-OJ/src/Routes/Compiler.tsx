@@ -155,6 +155,7 @@ const Compiler = () => {
               <textarea
                 className="bg-slate-800 px-2 py-1.5 text-slate-300 w-full outline-none"
                 id="input"
+                rows={10}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />

@@ -1,4 +1,6 @@
 import "colors";
+import { exec } from "child_process";
+import path from "path";
 import { Problem } from "../../models/Problem.js";
 import { generateFile } from "../../generateFile.js";
 import fs from "fs";
@@ -23,7 +25,27 @@ export const submitCode = async (req, res) => {
     filePath = await generateFile(code, extension, language);
     inputPath = await inputFileGenerate(filePath, "", language);
 
+    if (language === "cpp") {
+      const __dirname = path.resolve();
+      const cppDir = path.join(__dirname, "codes/cpp");
+      const jobId = path.basename(filePath).split(".")[0];
+      await new Promise((resolve, reject) => {
+        exec(
+          `cd ${cppDir} && g++ ${jobId}.cpp -o ${jobId}.out`,
+          (error, stdout, stderr) => {
+            if (error) {
+              reject(`Compilation Error ${(error, stderr)}`);
+            } else if (stderr) {
+              reject(stderr);
+            }
+            resolve(stdout);
+          }
+        );
+      });
+    }
+
     let maxTime = 0;
+    const timeLimit = problem.timeLimit || 1;
 
     for (const [index, testCase] of problem.testCases.entries()) {
       const strInput = testCase.input.join("\n");
@@ -37,19 +59,19 @@ export const submitCode = async (req, res) => {
       switch (language) {
         case "cpp":
           start = performance.now();
-          output = await executeCPP(filePath);
+          output = await executeCPP(filePath, timeLimit);
           end = performance.now();
           break;
 
         case "python":
           start = performance.now();
-          output = await executePython(filePath);
+          output = await executePython(filePath, timeLimit);
           end = performance.now();
           break;
 
         case "javascript":
           start = performance.now();
-          output = await executeJS(filePath);
+          output = await executeJS(filePath, timeLimit);
           end = performance.now();
           break;
       }

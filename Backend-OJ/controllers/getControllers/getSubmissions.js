@@ -4,7 +4,9 @@ export const getSubmissions = async (req, res) => {
   const userId = req.cookies.userId;
 
   try {
-    const submissions = await Submission.find({ userId });
+    const submissions = await Submission.find({ userId }).sort({
+      createdAt: 1,
+    });
     return res.status(200).json({ submissions });
   } catch (error) {
     console.log(`Error fetching submissions: ${error}`.bgRed);

@@ -14,6 +14,10 @@ const ProblemSchema = new Schema({
     ref: "User",
     required: true,
   },
+  timeLimit: {
+    type: Number,
+    default: 1,
+  },
   testCases: {
     type: [
       {

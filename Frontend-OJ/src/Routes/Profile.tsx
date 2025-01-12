@@ -61,9 +61,9 @@ const Profile = () => {
 
   const handleLogOut = () => {
     const cookieOptions: CookieAttributes = {
-      secure: true,
-      sameSite: "Strict",
-      domain: ".thinkxcode.online",
+      // secure: true,
+      // sameSite: "Strict",
+      // domain: import.meta.env.VITE_DOMAIN,
     };
     Cookies.remove("username", cookieOptions);
     Cookies.remove("userId", cookieOptions);

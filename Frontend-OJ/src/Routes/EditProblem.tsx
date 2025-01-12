@@ -11,6 +11,7 @@ const EditProblem = () => {
   const [problemDetails, setProblemDetails] = useState({
     title: "",
     description: "",
+    timeLimit: 1,
     testCases: [
       {
         input: "",
@@ -45,6 +46,7 @@ const EditProblem = () => {
         setProblemDetails({
           title: data.problem.title.join("\n"),
           description: data.problem.description.join("\n"),
+          timeLimit: data.problem.timeLimit || 1,
           testCases: data.problem.testCases.map((eachCase: any) => ({
             input: eachCase.input.join("\n"),
             output: eachCase.output.join("\n"),
@@ -203,12 +205,33 @@ const EditProblem = () => {
               <textarea
                 id="description"
                 name="description"
-                placeholder="Enter The Problem Statement"
+                rows={20}
+                placeholder="Enter The Problem Description"
                 value={problemDetails.description}
                 onChange={(e) =>
                   setProblemDetails({
                     ...problemDetails,
                     description: e.target.value,
+                  })
+                }
+                className="px-2 py-1.5 rounded-md bg-transparent text-slate-300 border-2 border-slate-500"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="description" className="text-red-400 text-lg">
+                Time Limit (In Seconds)
+              </label>
+              <input
+                id="timeLimit"
+                type="number"
+                min={1}
+                name="timeLimit"
+                placeholder="Enter The Time Limit"
+                value={problemDetails.timeLimit}
+                onChange={(e) =>
+                  setProblemDetails({
+                    ...problemDetails,
+                    timeLimit: parseFloat(e.target.value),
                   })
                 }
                 className="px-2 py-1.5 rounded-md bg-transparent text-slate-300 border-2 border-slate-500"

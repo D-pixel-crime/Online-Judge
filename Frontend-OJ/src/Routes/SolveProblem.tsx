@@ -20,6 +20,7 @@ const SolveProblem = () => {
     title: [""],
     description: [""],
     testCases: [{ input: [""], output: [""] }],
+    timeLimit: 1,
     author: {
       username: "",
     },
@@ -46,6 +47,7 @@ const SolveProblem = () => {
           title: data.problem.title,
           description: data.problem.description,
           testCases: data.problem.testCases,
+          timeLimit: data.problem.timeLimit || 1,
           author: {
             username: data.problem.author.username,
           },
@@ -192,6 +194,10 @@ const SolveProblem = () => {
                   <br />
                 </React.Fragment>
               ))}
+            </p>
+            <p className="text-red-500 mt-10">
+              Time Limit :{" "}
+              <span className="text-white">{problemDetails.timeLimit || 1} second(s)</span>
             </p>
             <div className="mt-12 flex flex-col gap-5">
               {problemDetails.testCases.length > 2

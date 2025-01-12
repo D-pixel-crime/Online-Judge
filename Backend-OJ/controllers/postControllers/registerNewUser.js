@@ -41,21 +41,21 @@ export const registerNewUser = async (req, res) => {
 
     res.cookie("username", username, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      sameSite: "None",
-      secure: true,
-      domain: ".thinkxcode.online",
+      // sameSite: "None",
+      // secure: true,
+      // domain: process.env.DOMAIN,
     });
     res.cookie("userId", stringUserId, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      sameSite: "None",
-      secure: true,
-      domain: ".thinkxcode.online",
+      // sameSite: "None",
+      // secure: true,
+      // domain: process.env.DOMAIN,
     });
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 60 * 24 * 2,
-      sameSite: "None",
-      secure: true,
-      domain: ".thinkxcode.online",
+      // sameSite: "None",
+      // secure: true,
+      // domain: process.env.DOMAIN,
     });
 
     return res.status(200).json({ token });
