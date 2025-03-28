@@ -71,7 +71,19 @@ Follow these instructions to set up and run "ThinkXCode" Online Judge on your lo
    OJ_FRONTEND_URI = http://localhost:5173
    MONGO_URI = your_mongodb_uri
    JWT_SECRET = your_jwt_secret
+   DOMAIN = If_u_have_a_domain
    ```
+
+   If you have a domain, then uncomment the secure fetching and domain in login and register
+
+   Create a `.env` file in the `backend` directory and add the following:
+
+   ```plaintext
+   VITE_OJ_BACKEND_URI = http://localhost:3000
+   DOMAIN = If_u_have_a_domain
+   ```
+
+   If you have a domain, then uncomment the secure fetching and domain in profile
 
 5. **Build and start the Docker containers:**
 
