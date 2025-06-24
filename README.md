@@ -126,7 +126,7 @@ docker run -it -d -p 3000:3000 <image_name>
 
 ## 📞 Contact
 
-📧 Email: [dpk4383@gmail.com](mailto:dpk4383@gmail.com)  
+📧 Email: [official.dpk.kumar@gmail.com](mailto:official.dpk.kumar@gmail.com)  
 🔗 Project Repository: [GitHub](https://github.com/D-pixel-crime/Online-Judge)  
 
 ---
