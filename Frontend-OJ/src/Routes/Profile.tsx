@@ -62,7 +62,7 @@ const Profile = () => {
   const handleLogOut = () => {
     const cookieOptions: CookieAttributes = {
       secure: true,
-      sameSite: "Strict",
+      sameSite: "None",
       domain: import.meta.env.VITE_DOMAIN,
     };
     Cookies.remove("username", cookieOptions);
