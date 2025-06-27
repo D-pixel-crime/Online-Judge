@@ -62,16 +62,15 @@ const Profile = () => {
   const handleLogOut = () => {
     // const cookieOptions: CookieAttributes = {
     //   secure: true,
-    //   sameSite: "None",
+    //   sameSite: "Strict",
     //   domain: import.meta.env.VITE_DOMAIN,
-    // };
-    // Cookies.remove("username", cookieOptions);
-    // Cookies.remove("userId", cookieOptions);
-    // Cookies.remove("token", cookieOptions);
     // };
     Cookies.remove("username");
     Cookies.remove("userId");
     Cookies.remove("token");
+    // Cookies.remove("username", cookieOptions);
+    // Cookies.remove("userId", cookieOptions);
+    // Cookies.remove("token", cookieOptions);
     window.location.href = "/login";
   };
 
