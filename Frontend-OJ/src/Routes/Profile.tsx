@@ -68,7 +68,7 @@ const Profile = () => {
     // Cookies.remove("username", cookieOptions);
     // Cookies.remove("userId", cookieOptions);
     // Cookies.remove("token", cookieOptions);
-    };
+    // };
     Cookies.remove("username");
     Cookies.remove("userId");
     Cookies.remove("token");
